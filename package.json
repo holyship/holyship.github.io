@@ -1,0 +1,20 @@
+{
+  "name": "feeds",
+  "version": "1.0.0",
+  "description": "cache the feed from somewhere",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-holyship:holyship/feeds.git"
+  },
+  "author": "Holy Ship",
+  "license": "MIT",
+  "dependencies": {
+    "js-yaml": "^3.8.3",
+    "nightmare": "^2.10.0",
+    "sanitize-filename": "^1.6.1"
+  }
+}
