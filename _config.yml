@@ -212,7 +212,7 @@ collections:
   # 航班管家老机长
   # 专注于移动互联网从业者技术交流、职业发展，分析移动互联网最新发展趋势，提供最有价值的沙龙论坛。
   gh_ce7347f4401e:
-    cache_image: true
+    cache_image: false
     output: true
   # 好奇实验室
   # 等有钱了，我就做成《流言终结者》！
