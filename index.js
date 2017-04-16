@@ -221,19 +221,18 @@ layout: null
 
 function crawl(feeds) {
   return feeds
-    .reduce((promise, {id, cache_image}, currentIndex) => {
-      console.log(`=================== ${currentIndex} - ${id} ===================`)
-      let processingIndex = 1;
-      let articleCount;
+    .reduce((promise, {id, cache_image}, currentIndex) =>
+      promise.then(() => {
+        console.log(`=================== ${currentIndex} - ${id} ===================`)
+        let processingIndex = 1;
+        let articleCount;
 
-      const folder = `./_${id}`;
-      if (!fs.existsSync(folder)) {
-        fs.mkdirSync(folder);
-        fs.mkdirSync(`${folder}/images`);
-      }
-
-      return promise.then(() =>
-        nightmare
+        const folder = `./_${id}`;
+        if (!fs.existsSync(folder)) {
+          fs.mkdirSync(folder);
+          fs.mkdirSync(`${folder}/images`);
+        }
+        return nightmare
           .goto(SEARCH_HOME)
           .type(SEARCH_BOX_INPUT, id)
           .click(SEARCH_BUTTON)
@@ -264,8 +263,8 @@ function crawl(feeds) {
           .then(() => // process articles
             processArticles(id, processingIndex, articleCount, cache_image)
           )
-        )
-    }, Promise.resolve())
+        })
+    , Promise.resolve())
     .catch(console.error)
     .then(() => nightmare.end());
 }
