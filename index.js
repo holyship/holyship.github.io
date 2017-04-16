@@ -24,10 +24,6 @@ function writeFile(path, data) {
 }
 
 function download(url, dest) {
-  if (fs.existsSync(dest)) {
-    console.log(`delete existing file: ${dest}`);
-    fs.unlinkSync(dest);
-  }
   console.log(`download ${url} to ${dest}`);
   const file = fs.createWriteStream(dest);
   return new Promise((resolve, reject) => {
@@ -277,7 +273,7 @@ function getCollection(args) {
       const startPos = parseInt(args[0]);
 	  if (isNaN(startPos)) {
 		feeds = feeds.filter(f => f.id === args[0]);
-	  } else { 
+	  } else {
         feeds = feeds.slice(startPos);
 	  }
     } else if (args.length === 2) {
