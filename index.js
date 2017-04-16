@@ -274,7 +274,12 @@ function getCollection(args) {
     const doc = yaml.safeLoad(fs.readFileSync('./_config.yml', 'utf8'));
     let feeds = Object.keys(doc.collections).map(id => Object.assign({ id }, doc.collections[id]));
     if (args.length === 1) {
-      feeds = feeds.slice(+args[0]);
+      const startPos = parseInt(args[0]);
+	  if (isNaN(startPos)) {
+		feeds = feeds.filter(f => f.id === args[0]);
+	  } else { 
+        feeds = feeds.slice(startPos);
+	  }
     } else if (args.length === 2) {
       feeds = feeds.slice(+args[0], +args[1]);
     }
