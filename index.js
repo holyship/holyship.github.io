@@ -92,9 +92,11 @@ function downloadImages(id, images, data) {
 
 function saveArticle(id, { title, author, date, content, fullPath, images }) {
   return downloadImages(id, images, `---
-title: ${title.trim().replace(/(\s|"|')+/g, '')}
-author: ${author.trim().replace(/(\s|"|')+/g, '')}
-date: ${new Date(date).toISOString().slice(0, 19).replace('T', ' ')} +0000
+${yaml.safeDump({
+  title,
+  author,
+  date: `${new Date(date).toISOString().slice(0, 19).replace('T', ' ')} +0000`
+})}
 ---
 
 ${content}
