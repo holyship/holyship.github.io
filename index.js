@@ -99,7 +99,9 @@ ${yaml.safeDump({
 })}
 ---
 
+{% raw  %}
 ${content}
+{% endraw  %}
 
 `).then((data) => writeFile(fullPath, data));
 }

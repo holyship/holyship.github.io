@@ -379,11 +379,6 @@ collections:
   sagacity-mac:
     cache_image: false
     output: true
-  # M2adventure
-  # M2isacommunityoftravelling&outdooractivitieslovers.JoinM2group,jointheadventure!:)
-  M2adventure:
-    cache_image: false
-    output: true
   # 牧夫天文
   # 中国最早的天文社区网站，成立于1999年，这里是牧夫天文论坛的官方交互电子刊。通过本微信公众订阅号，您可以及时了解天文、航天和牧夫论坛的最新资讯，并可深入学习天文器材和双筒望远镜等光学仪器的使用方法，和全球华人一起交流分享使用经验。
   astronomycn:
@@ -524,11 +519,6 @@ collections:
   # 探索有趣的事，遇见有趣的人。
   tansuo-time:
     cache_image: true
-    output: true
-  # Trustdata信诺大数据
-  # Trustdata中国最大移动互联网大数据监测平台，致力成为中国大数据时代下最领先的移动应用数据内容解决方案提供商，为客户提供最专业的移动端各领域数据产品、咨询等专业服务。
-  TrustData:
-    cache_image: false
     output: true
   # 腾讯
   # 腾讯公司唯一官方帐号。
