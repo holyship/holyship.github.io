@@ -12,7 +12,7 @@ collections:
   # AI科技评论
   # 「AI科技评论」是国内顶尖人工智能媒体和产业服务平台，专注全球AI业界、学术和开发三大方向的深度报道。
   aitechtalk:
-    cache_image: true
+    cache_image: false
     output: true
   # 哎咆科技
   # 原「果粉查询」公众号蜕变为专注科技生活媒体，提供最前沿科技动态及爆料，产品试用测评&众筹，苹果序列号查询，山寨机&翻新机验证等服务。
@@ -77,7 +77,7 @@ collections:
   # 奔跑的楠子
   # 一个90后の自我养成记，想要和你一起变成更好的人！
   nanzimail:
-    cache_image: true
+    cache_image: false
     output: true
   # 不玩会死
   # 如果你爱玩，善玩，以玩自豪，欢迎入坑玩货群体。
@@ -207,7 +207,7 @@ collections:
   # 坏时代
   # 这是最好的时代，也是最坏的时代。「小道消息」2.0版本。
   TheBadTime:
-    cache_image: true
+    cache_image: false
     output: true
   # 航班管家老机长
   # 专注于移动互联网从业者技术交流、职业发展，分析移动互联网最新发展趋势，提供最有价值的沙龙论坛。
@@ -282,7 +282,7 @@ collections:
   # keso怎么看
   # 科技，互联网，生活及其他
   kesoview:
-    cache_image: true
+    cache_image: false
     output: true
   # 氪TV
   # 36氪官方视频品牌
@@ -317,7 +317,7 @@ collections:
   # 懒人在思考
   # 本懒号主要关注点：隐私、攻击、安全开发。从我们这，你至少可以知道当下黑客世界的另类视角。By余弦@LanT34m
   lazy-thought:
-    cache_image: true
+    cache_image: false
     output: true
   # Linux中国
   # 十万级技术订阅号，依托于『Linux中国』（https://linux.cn/）社区，专注于Linux学习、技术研究、开源思想传播。
@@ -503,7 +503,7 @@ collections:
   # Spenser
   # Spenser:金融圈的职场老司机，世俗的伪文艺男中年，这里是60万城市新青年的思想聚集地
   spenserandhk:
-    cache_image: true
+    cache_image: false
     output: true
   # 省钱研究所
   # 更聪明的生活，更享受生活
