@@ -96,8 +96,8 @@ function downloadImages(id, images, data) {
 
 function saveArticle(id, { title, author, date, content, fullPath, images }) {
   return downloadImages(id, images, `---
-title: ${title}
-author: ${author}
+title: ${title.trim().replace(/\s+/g, '_')}
+author: ${author.trim().replace(/\s+/g, '_')}
 date: ${new Date(date).toISOString().slice(0, 19).replace('T', ' ')} +0000
 ---
 
