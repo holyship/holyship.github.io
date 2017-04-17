@@ -236,6 +236,7 @@ layout: null
 }
 
 function timeMatch(str) {
+  if (!str) return undefined;
   const hourMath = str.match(/^(\d+)小时前$/);
   if (hourMath) {
     return formatDate(Date.now() - (+hourMath[1]) * 3600 * 1000);
@@ -270,12 +271,18 @@ function crawl(feeds) {
           .type(SEARCH_BOX_INPUT, id)
           .click(SEARCH_BUTTON)
           .wait(SEARCH_RESULT_URL)
-          .evaluate(function(resultUrl, recentArticle, time) {
-            return {
-              url: document.querySelector(resultUrl).href,
-              recentArticle: document.querySelector(recentArticle).innerText.trim(),
-              time: document.querySelector(time).innerText.trim(),
-            };
+          .evaluate(function(resultUrl, recentArticle, recentArticleTime) {
+            const article = document.querySelector(recentArticle);
+            const time = document.querySelector(recentArticleTime);
+            let result = {};
+            if (article && time) {
+              result = {
+                recentArticle: article.innerText.trim(),
+                time: time.innerText.trim(),
+              }
+            }
+            result.url = document.querySelector(resultUrl).href
+            return result;
           }, SEARCH_RESULT_URL, RECENT_ARTICLE, RECENT_ARTICLE_TIME)
           .then(({url, recentArticle, time}) => {// go to result url
             const timeStr = timeMatch(time);

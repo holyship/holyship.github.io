@@ -159,11 +159,6 @@ collections:
   gh_ce7347f4401e:
     cache_image: false
     output: true
-  # 花儿街参考
-  # 这里是一个贪财好色的地方
-  zaraghost: ### too many
-    cache_image: false
-    output: true
   # 酱油炒饭
   # 山那边的朋友们，你们好吗~~~
   LiWei_on_IT:
@@ -192,11 +187,6 @@ collections:
   # 科学性
   # 科学性是丁香医生旗下的两性科普平台。有趣、有用、有料，和你一起科学地探索G点。我们将改变潮水的高度。
   sex-ology:
-    cache_image: false
-    output: true
-  # KnowYourself
-  # 深夜友好型公号。宇宙中最酷的心理学社区。人人都能看懂，但只有一部分人才会喜欢。
-  knowyourself2015: ### too many
     cache_image: false
     output: true
   # keso怎么看
@@ -399,11 +389,6 @@ collections:
   i_wanglu:
     cache_image: true
     output: true
-  # 微软招聘
-  # 微软中国招聘微信公众平台，敬请关注！
-  msstaffing: ### too many
-    cache_image: false
-    output: true
   # 歪理邪说
   # 一切关于未来的故事在实现之前都是歪理邪说。
   wxieshuo:
@@ -417,11 +402,6 @@ collections:
   # 微软丹棱街5号
   # 微软亚太研发集团官方账号，也是微软与极客朋友们分享黑科技、互动交流的第一窗口。欢迎走进丹棱街5号，探索科技力量，感悟澎湃创新！
   Microsoft_ARD: ### too many
-    cache_image: false
-    output: true
-  # 新生大学
-  # 学习学习再学习，七年就是一辈子……
-  xinshengdaxue: ### too many
     cache_image: false
     output: true
   # 小道消息
@@ -449,20 +429,10 @@ collections:
   wangbinnv09:
     cache_image: false
     output: true
-  # 英文悦读
-  # 可能是最靠谱的英文学习公众号之一，学英语，总会有好事发生的。
-  read_the_economist: ### too many
-    cache_image: false
-    output: true
   # 悠然间
   # 素食、教育、国际象棋、瑜伽、科技、音乐、茶……分享悠然生活，欢迎随时转转
   Rosetime_thu:
     cache_image: true
-    output: true
-  # 艺术之间
-  # 这是一个比你更懂你的生活美学小站。小间为你寻遍世间美物，然后根据你的审美，呈现给你——对，只呈现你会喜欢的东西！
-  yishu16: ### too many
-    cache_image: false
     output: true
   # 余晟以为
   # 我是这么以为的，当然你也可以那么以为
@@ -497,11 +467,6 @@ collections:
   # 征信小助手
   # 分享、传播征信知识
   zgzxxzs:
-    cache_image: false
-    output: true
-  # 中意人寿
-  # 欢迎关注中意人寿。中意人寿e路保赠险活动开始了！！！在2016年11月30日—2017年3月1日期间，点击关注，即可免费领取价值30万的"中意e路保列车交通意外保险"。
-  zhongyilife:
     cache_image: false
     output: true
   # 301在路上
