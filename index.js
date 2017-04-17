@@ -148,8 +148,8 @@ function getDateOnly(info) {
   return formatDate(info.split(/年|月|日|原创/).filter(v => v).join('-'));
 }
 
-function processArticles(id, processingIndex, articleCount, cacheImage) {
-  if (processingIndex >= articleCount) return Promise.resolve();
+function processArticles(id, processingIndex, cacheImage) {
+  if (processingIndex < 0) return Promise.resolve();
   console.log(`start on #${processingIndex}`);
   const article = {};
   return waitUntilNoVerify().then(() =>
@@ -169,7 +169,7 @@ function processArticles(id, processingIndex, articleCount, cacheImage) {
       if (fs.existsSync(fileFullPath)) {
         // skip if exist
         console.log(`skiping: ${fileFullPath}`);
-        return processArticles(id, processingIndex + 1, articleCount, cacheImage);
+        return processArticles(id, processingIndex - 1, cacheImage);
       }
       // process the detail content
       console.log(`processing: ${fileFullPath}`);
@@ -205,7 +205,7 @@ function processArticles(id, processingIndex, articleCount, cacheImage) {
           return saveArticle(id, article);
         })
         .then(() => nightmare.back())
-        .then(() => processArticles(id, processingIndex + 1, articleCount, cacheImage));
+        .then(() => processArticles(id, processingIndex - 1, cacheImage));
     });
 }
 
@@ -264,7 +264,6 @@ function crawl(feeds) {
     .reduce((promise, {id, cache_image}, currentIndex) =>
       promise.then(() => {
         console.log(`=================== ${currentIndex} - ${id} ===================`)
-        let processingIndex = 0;
         let articleCount;
 
         const folder = `./_${id}`;
@@ -318,7 +317,7 @@ function crawl(feeds) {
                   })
               )
               .then(() => // process articles
-                processArticles(id, processingIndex, articleCount, cache_image)
+                processArticles(id, articleCount - 1, cache_image)
               )
           })
         })
