@@ -4,21 +4,6 @@ exclude:
   - Gemfile.lock
 
 collections:
-  # 爱棋艺
-  # 爱棋艺，领先的国际象棋在线教育平台。超过十万爱好者的线上社区家园。
-  chessvip:
-    cache_image: false
-    output: true
-  # AI科技评论
-  # 「AI科技评论」是国内顶尖人工智能媒体和产业服务平台，专注全球AI业界、学术和开发三大方向的深度报道。
-  aitechtalk:
-    cache_image: false
-    output: true
-  # 哎咆科技
-  # 原「果粉查询」公众号蜕变为专注科技生活媒体，提供最前沿科技动态及爆料，产品试用测评&众筹，苹果序列号查询，山寨机&翻新机验证等服务。
-  guofen1225:
-    cache_image: false
-    output: true
   # AlgorithmDog
   # AlgorithmDog讲述机器学习和系统研发的轶事，希望把这些事讲得生动有趣。每两周更新哦。欢迎关注。
   AlgorithmDog:
@@ -44,24 +29,9 @@ collections:
   ban-qing-ren:
     cache_image: true
     output: true
-  # 北京地税
-  # 为纳税人便捷纳税提供互动交流、涉税查询、税收宣传等纳税服务
-  beijingdishuiju:
-    cache_image: false
-    output: true
-  # 哔哔日志
-  # YoucanyouUP.NocannoBB.
-  bibirizhi:
-    cache_image: true
-    output: true
   # 暴走看啥片儿
   # 史上最实惠、最接地气的影评节目！绝对是您居家旅行必备观影指南！
   baozoukspr:
-    cache_image: false
-    output: true
-  # 暴走大事件
-  # 荆轲刺秦王！
-  bzdashijian:
     cache_image: false
     output: true
   # 比尔盖茨
@@ -99,16 +69,6 @@ collections:
   programmer_life:
     cache_image: true
     output: true
-  # 电影工厂
-  # 百万用户首选电影微刊，每天为你推荐最新、最热、最好的电影资源，最具深度的影评，电影控的超级乐园。
-  vipidy:
-    cache_image: false
-    output: true
-  # 毒舌电影
-  # 坚持原创，只说真话——回复片名，看好电影
-  dsmovie:
-    cache_image: false
-    output: true
   # 待字闺中
   # 深度分析大数据、深度学习、人工智能等技术，切中实际应用场景，为大家授业解惑。间或，也会介绍国内外相关领域有趣的面试题。
   daiziguizhongren:
@@ -117,11 +77,6 @@ collections:
   # 大玩家张磊
   # 大玩家，讲述年轻人的旅行、消费和投资的话题，内容由作者张磊100%原创。如果你对银行、用卡、旅行、投资知识感兴趣，不妨跟大玩家一起体验一下高品质的生活。
   seniorplayer:
-    cache_image: false
-    output: true
-  # 丁香医生
-  # 丁香医生是丁香园旗下的健康管理平台。这里有专业医生写的健康科普。身体上的问题，来问丁香医生。
-  DingXiangYiSheng:
     cache_image: false
     output: true
   # 董老师在硅谷
@@ -143,11 +98,6 @@ collections:
   # 用照片记录生活
   photobystan:
     cache_image: true
-    output: true
-  # 二更
-  # 每晚二更，一部原创精品视频，发现身边不知道的美。
-  zjhtcmgs111:
-    cache_image: false
     output: true
   # 二爷鉴书
   # 第一时间向大家推荐好书和介绍，同时坚决揭露烂书，以IT、互联网行业为主。个人品味，仅供参考。
@@ -189,11 +139,6 @@ collections:
   guiguguancha:
     cache_image: false
     output: true
-  # 概率论
-  # 这个地球上有几十亿人口，两个人相遇的概率是千万分之一。跟我走，带你去撞见有趣的灵魂。
-  ilovexiaogai:
-    cache_image: false
-    output: true
   # GrootSalon
   # 格鲁特分享
   GrootSalon:
@@ -214,29 +159,9 @@ collections:
   gh_ce7347f4401e:
     cache_image: false
     output: true
-  # 好奇实验室
-  # 等有钱了，我就做成《流言终结者》！
-  haoqishiyanshi:
-    cache_image: false
-    output: true
-  # 红玫瑰定律
-  # 女人如花，青春正艳，最似玫瑰，既美丽又爱情。而我们要送您的是一束特别的红玫瑰——助您健康之完美的系列定律，一流干货派，略晦涩，但绝对费劲心血，真心实意才是满满的爱！
-  missdouhu:
-    cache_image: false
-    output: true
   # 花儿街参考
   # 这里是一个贪财好色的地方
-  zaraghost:
-    cache_image: false
-    output: true
-  # InfoQ
-  # 有内容的技术社区媒体
-  infoqchina:
-    cache_image: false
-    output: true
-  # 极客公园
-  # 科技创新者的大本营。汇聚优秀的产品报道、评测视频和高质量的线下活动。
-  geekpark:
+  zaraghost: ### too many
     cache_image: false
     output: true
   # 酱油炒饭
@@ -259,11 +184,6 @@ collections:
   HiNotes:
     cache_image: true
     output: true
-  # 科技美学中国
-  # 科技美学小号，一些被删除的文章，可以在这里找到
-  kjmxcn:
-    cache_image: false
-    output: true
   # Kane的小K屋
   # 给朋友们分享俺的作品，希望给大家带来快乐
   KRoom01:
@@ -276,7 +196,7 @@ collections:
     output: true
   # KnowYourself
   # 深夜友好型公号。宇宙中最酷的心理学社区。人人都能看懂，但只有一部分人才会喜欢。
-  knowyourself2015:
+  knowyourself2015: ### too many
     cache_image: false
     output: true
   # keso怎么看
@@ -287,11 +207,6 @@ collections:
   # 氪TV
   # 36氪官方视频品牌
   krvideo:
-    cache_image: false
-    output: true
-  # 科技美学
-  # 中国领先的科技新媒体，那岩每天用语音为你解读前沿科技，更有每期平均100万播放量的数码产品测评视频放送。工作外联kejimeixue@163.com、官方网站kjmx.com、官方浪微博@科技美学
-  kejimx:
     cache_image: false
     output: true
   # LateNews by 小晚
@@ -319,11 +234,6 @@ collections:
   lazy-thought:
     cache_image: false
     output: true
-  # Linux中国
-  # 十万级技术订阅号，依托于『Linux中国』（https://linux.cn/）社区，专注于Linux学习、技术研究、开源思想传播。
-  linux-cn:
-    cache_image: false
-    output: true
   # 灵雀云
   # 灵雀云是中国第一家基于容器，服务于完整开发周期的新一代云平台。灵雀云以容器这个新一代应用交付件为中心，全方位支持云端应用创建、编译、集成、部署、运行的每一个环节。
   AlaudaCloud:
@@ -338,16 +248,6 @@ collections:
   # 在这里煮酒聊架构。
   archtime:
     cache_image: true
-    output: true
-  # 里面有只小白兔
-  # 先锋无料女性，影视歌三栖网黄，诗歌，话语，绘画。深夜你可以更无聊。
-  mingbaikan:
-    cache_image: false
-    output: true
-  # 罗永浩
-  # 锤子科技CEO
-  smartisan2013:
-    cache_image: false
     output: true
   # Microsoft认知服务
   # 微软认知服务（前牛津计划）认证公众号。分享认知服务提供的技术文档，演示，服务，应用精选，行业视野，及媒体动态。愿成为您的最强大脑，让智能服务触手可及。
@@ -364,14 +264,9 @@ collections:
   marvinsthought:
     cache_image: true
     output: true
-  # 明白学堂
-  # “明白学堂”是国内第一两性内容品牌，以精子先生王小明和污之少女李小白为主角，通过贱萌的方式为用户提供靠谱的两性生理，心理和情感知识。
-  imingbai:
-    cache_image: false
-    output: true
   # Megvii旷视科技
   # 旷视(Face++)是一家以计算机视觉为核心的人工智能企业，致力于为行业型用户和个人型用户提供全方位的智能解决方案和智能数据服务。
-  megvii-tech:
+  megvii-tech: ### too many
     cache_image: false
     output: true
   # MacTalk
@@ -379,24 +274,9 @@ collections:
   sagacity-mac:
     cache_image: false
     output: true
-  # 牧夫天文
-  # 中国最早的天文社区网站，成立于1999年，这里是牧夫天文论坛的官方交互电子刊。通过本微信公众订阅号，您可以及时了解天文、航天和牧夫论坛的最新资讯，并可深入学习天文器材和双筒望远镜等光学仪器的使用方法，和全球华人一起交流分享使用经验。
-  astronomycn:
-    cache_image: false
-    output: true
-  # 南都周刊
-  # 有温度的新媒体
-  nbweekly:
-    cache_image: false
-    output: true
-  # 奴隶社会
-  # 不端不装有梦有趣的原创文字，听现实的理想主义者讲自己的故事。我们有高大上咨询公司合伙人，挨踢界的连续创业者，顶级VC合伙人，著名科普作家，公益人，和很多很多朋友。加入奴隶社会，也加入我们的社区，相信你在这里一定可以找到志同道合的朋友。
-  nulishehui:
-    cache_image: false
-    output: true
   # OfferCome猎头
   # 专注于互联网、移动互联网的猎头资讯平台。
-  gh_c8c6865b6d8a:
+  gh_c8c6865b6d8a: ### too many
     cache_image: false
     output: true
   # 皮卡熊狂想曲
@@ -404,24 +284,9 @@ collections:
   pika-bear:
     cache_image: false
     output: true
-  # Poweron
-  # 和Poweron一起，跟上这个时代
-  tengxunzhineng:
-    cache_image: false
-    output: true
   # 七牛云
   # 七牛云，开发者的互联网创新加速引擎。
   qiniutek:
-    cache_image: false
-    output: true
-  # 骑驴
-  # 中国第一旅行微刊，骑驴是领先的旅游及旅行社交平台，每天为你推荐靠谱的旅行方案、旅行攻略、旅游产品、交友结伴等信息。骑驴，游天下！
-  qilvtravel:
-    cache_image: false
-    output: true
-  # 骑行西藏
-  # tao&雅菲的世界
-  gobybike:
     cache_image: false
     output: true
   # 奇舞周刊
@@ -444,10 +309,9 @@ collections:
   # gh_d95a99307fdc:
   #   cache_image: true
   #   output: true
-
   # RTBChina
   # RTBChina是关于中国网络广告新生态系统的资讯精选。介绍DSP,SSP,AdExchange,DMP,和数据交易平台在中国发展状况。www.RTBChina.com编纂维护最新的《中国RTB广告技术产业地图》和行业研究报告
-  RTBChina:
+  RTBChina: ### too many
     cache_image: false
     output: true
   # 肉饼铺子
@@ -455,19 +319,9 @@ collections:
   robbinthoughts:
     cache_image: false
     output: true
-  # 人民日报
-  # 参与、沟通、记录时代。
-  rmrbwx:
-    cache_image: false
-    output: true
   # 日食记
   # 温暖治愈你的心和胃。
   rishi-ji:
-    cache_image: false
-    output: true
-  # 人民日报评论
-  # 人民日报评论部微信公共账号。秉承党报评论的厚土，我们向新媒体平台伸出小小一枝，期待与您一起见证复杂而深刻的转型中国。
-  rmrbpl:
     cache_image: false
     output: true
   # 三表蛇门阵
@@ -485,11 +339,6 @@ collections:
   sanbiao1984:
     cache_image: false
     output: true
-  # 数字尾巴
-  # “分享美好数字生活”是数字尾巴一直所提倡并坚持的理念，囊括手机、平板、周边、摄影、旅行、生活、资讯等近二十多个系列内容，为热爱生活的朋友们提供了一个可以畅所欲言广结同好的平台，引领着喜爱数码科技的用户们看到更广阔的世界。
-  dgtlestyle:
-    cache_image: false
-    output: true
   # 十分钟读完一本书
   # 每月分享一本好书的浓缩版，如果觉得有意思，可以买来读一读。关注领域：商业、科技、心理学、个人成长、有效沟通等。
   Read_a_Book_a_Week:
@@ -497,7 +346,7 @@ collections:
     output: true
   # Spenser
   # Spenser:金融圈的职场老司机，世俗的伪文艺男中年，这里是60万城市新青年的思想聚集地
-  spenserandhk:
+  spenserandhk: ### too many
     cache_image: false
     output: true
   # 省钱研究所
@@ -510,11 +359,6 @@ collections:
   zny918:
     cache_image: true
     output: true
-  # sky
-  # 李晓峰，钛度科技创始人，2005、2006两届WCG魔兽项目冠军，被称为魔兽“人皇”，中国电子竞技领域旗帜性人物
-  skylixiaofeng:
-    cache_image: false
-    output: true
   # 探索时间
   # 探索有趣的事，遇见有趣的人。
   tansuo-time:
@@ -522,12 +366,7 @@ collections:
     output: true
   # 腾讯
   # 腾讯公司唯一官方帐号。
-  tencent:
-    cache_image: false
-    output: true
-  # 腾讯手机管家
-  # 腾讯手机管家是一款完全免费的手机安全与管理软件，以“手机安全管理先锋”为使命，在提供病毒查杀、骚扰拦截、软件权限管理等安全防护的基础上，主动满足用户流量监控、空间清理、体检加速等高端化和智能化的手机管理需求，是您的贴心管家。
-  txsjgj:
+  tencent: ### too many
     cache_image: false
     output: true
   # 天猫技术
@@ -537,7 +376,7 @@ collections:
     output: true
   # 微信派
   # 微信第一手官方活动信息发布，线下沙龙活动在线互动平台。独家分享微信公众平台优秀案例，以及权威专家的精彩观点。
-  wx-pai:
+  wx-pai: ### too many
     cache_image: false
     output: true
   # 微软小娜
@@ -547,7 +386,7 @@ collections:
     output: true
   # 微软科技
   # 微软中国官方公众号
-  mstech2014:
+  mstech2014: ### too many
     cache_image: false
     output: true
   # 微软苏州
@@ -560,24 +399,9 @@ collections:
   i_wanglu:
     cache_image: true
     output: true
-  # 吾皇万睡
-  # 做为一只喵，如果没有自己傲娇的原则，那跟狗还有什么区别。
-  whbzh520:
-    cache_image: false
-    output: true
   # 微软招聘
   # 微软中国招聘微信公众平台，敬请关注！
-  msstaffing:
-    cache_image: false
-    output: true
-  # 万星人
-  # 第一手万合资讯，最搞笑内容推荐。还有意想不到的惊喜，精彩不停歇，欢乐不断档。关注小万将带你走上人生巅峰！
-  wanxingren01:
-    cache_image: false
-    output: true
-  # 雾霾一周先知
-  # 每天发布。雾霾PM2.5和沙尘的最新一周污染扩散动向的预测动图。根据最新实测数据和联合国IPCC采用的动态预测模型研究制作。权威。准确。直观。动态。雾霾沙尘从哪来往哪去？你该不该出门？能不能舒心呼吸？要不要防护？何时能见蓝天？一看就知道！
-  SPRINTARS:
+  msstaffing: ### too many
     cache_image: false
     output: true
   # 歪理邪说
@@ -592,22 +416,12 @@ collections:
     output: true
   # 微软丹棱街5号
   # 微软亚太研发集团官方账号，也是微软与极客朋友们分享黑科技、互动交流的第一窗口。欢迎走进丹棱街5号，探索科技力量，感悟澎湃创新！
-  Microsoft_ARD:
-    cache_image: false
-    output: true
-  # 污萌少女李小白
-  # 呜呜呜呜呜呜呜呜呜。开火车了
-  wumenglixiaobai:
+  Microsoft_ARD: ### too many
     cache_image: false
     output: true
   # 新生大学
   # 学习学习再学习，七年就是一辈子……
-  xinshengdaxue:
-    cache_image: true
-    output: true
-  # Xtecher
-  # Xtecher，囊括网站、App和遍及世界名校校友与科技企业的科技创业精英圈子，致力于发现、报道最有潜力的早期科技项目和人才，打造全球最有品质的科技创业媒体。
-  Xtecher:
+  xinshengdaxue: ### too many
     cache_image: false
     output: true
   # 小道消息
@@ -635,14 +449,9 @@ collections:
   wangbinnv09:
     cache_image: false
     output: true
-  # 翼下之风动漫
-  # 翼下之风动漫，代表作《那年那兔那些事儿》、《风刃空械队》、《目标：深蓝》
-  nanianna2:
-    cache_image: false
-    output: true
   # 英文悦读
   # 可能是最靠谱的英文学习公众号之一，学英语，总会有好事发生的。
-  read_the_economist:
+  read_the_economist: ### too many
     cache_image: false
     output: true
   # 悠然间
@@ -652,7 +461,7 @@ collections:
     output: true
   # 艺术之间
   # 这是一个比你更懂你的生活美学小站。小间为你寻遍世间美物，然后根据你的审美，呈现给你——对，只呈现你会喜欢的东西！
-  yishu16:
+  yishu16: ### too many
     cache_image: false
     output: true
   # 余晟以为
@@ -662,22 +471,12 @@ collections:
     output: true
   # 夜航船Northfleet
   # 我们真实可感，躲无可躲的生活。
-  northfleet:
+  northfleet: ### too many
     cache_image: false
     output: true
   # 移动开发前线
   # 专注于分享移动开发前沿和一线技术。
-  bornmobile:
-    cache_image: false
-    output: true
-  # 有书
-  # 你有多久没有读完一本书了？立即加入有书共读行动计划，每周共读一本书。共读|分享|交友|成长，一年读完52本书，成为期待中的自己。
-  youshucc:
-    cache_image: false
-    output: true
-  # ZEALER订阅号
-  # 科技不无聊，行业热点很新鲜。这里是，科技改变生活第一站——ZEALER。每晚10点，与你分享当天「新科技」
-  zealertech:
+  bornmobile: ### too many
     cache_image: false
     output: true
   # 终端安全那些事儿
@@ -689,11 +488,6 @@ collections:
   # legendlin的个人小站
   camera_keyboard:
     cache_image: true
-    output: true
-  # 正午故事
-  # 致力于故事的发现与实现。
-  noon-story:
-    cache_image: false
     output: true
   # 职场沐心
   # 在世界500强IT公司摸爬滚打10余年，同时身为孩子的母亲，深知一个职场女性的不易与艰辛。在人生求索的路上，愿与各位职场女性一同探讨，一同成长。浴心而美，重新而美！
@@ -708,26 +502,6 @@ collections:
   # 中意人寿
   # 欢迎关注中意人寿。中意人寿e路保赠险活动开始了！！！在2016年11月30日—2017年3月1日期间，点击关注，即可免费领取价值30万的"中意e路保列车交通意外保险"。
   zhongyilife:
-    cache_image: false
-    output: true
-  # 最美应用
-  # 一起发现好用、好看、好玩的应用
-  nice-app:
-    cache_image: false
-    output: true
-  # 这才是吐槽
-  # 在这里，我们不装逼。
-  gaojitucao:
-    cache_image: false
-    output: true
-  # 猪小屁
-  # 人人都爱猪小屁──闷骚小暖男的日常
-  superapp520:
-    cache_image: false
-    output: true
-  # 36氪
-  # 36氪（36kr.com)是中国最具影响力的互联网创投媒体，提供最新锐最具深度的商业报道。我们强调趋势与价值，我们的slogan是：让一部分人先看到未来。
-  wow36kr:
     cache_image: false
     output: true
   # 301在路上
