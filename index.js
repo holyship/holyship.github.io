@@ -13,6 +13,7 @@ const SEARCH_BUTTON = 'input[type="button"][value="搜公众号"]';
 const SEARCH_RESULT_URL = '.news-box a[target="_blank"]';
 const ARTICLE_TITLE = '.weui_media_box h4';
 const ARTICLE_INFO = '.weui_media_box .weui_media_extra_info';
+const RECENT_ARTICLE = '.news-box dl:last-child dd';
 
 function writeFile(path, data) {
   return new Promise((resolve, reject) =>
@@ -126,6 +127,14 @@ function waitUntilNoVerify() {
     });
 }
 
+function formatDate(dateStr) {
+  return new Date(dateStr + ' 0:0:0 +0000').toISOString().slice(0, 10);
+}
+
+function getDateOnly(info) {
+  return formatDate(info.split(/年|月|日|原创/).filter(v => v).join('-'));
+}
+
 function processArticles(id, processingIndex, articleCount, cacheImage) {
   if (processingIndex >= articleCount) return Promise.resolve();
   console.log(`start on #${processingIndex}`);
@@ -141,7 +150,7 @@ function processArticles(id, processingIndex, articleCount, cacheImage) {
     )
     .then((basicInfo) => {
       Object.assign(article, basicInfo);
-      const fileName = sanitize(`${article.title}-${article.info}.html`);
+      const fileName = sanitize(`${getDateOnly(article.info)}-${article.title}.html`);
       const fileFullPath = `./_${id}/${fileName}`;
       article.fullPath = fileFullPath;
       if (fs.existsSync(fileFullPath)) {
@@ -224,7 +233,7 @@ function crawl(feeds) {
     .reduce((promise, {id, cache_image}, currentIndex) =>
       promise.then(() => {
         console.log(`=================== ${currentIndex} - ${id} ===================`)
-        let processingIndex = 1;
+        let processingIndex = 0;
         let articleCount;
 
         const folder = `./_${id}`;
@@ -237,29 +246,40 @@ function crawl(feeds) {
           .type(SEARCH_BOX_INPUT, id)
           .click(SEARCH_BUTTON)
           .wait(SEARCH_RESULT_URL)
-          .evaluate(function(selector) {
-            return document.querySelector(selector).href;
-          }, SEARCH_RESULT_URL)
-          .then(url => // go to result url
-            nightmare
+          .evaluate(function(resultUrl, recentArticle) {
+            return {
+              url: document.querySelector(resultUrl).href,
+              recentArticle: document.querySelector(recentArticle).innerText,
+            };
+          }, SEARCH_RESULT_URL, RECENT_ARTICLE)
+          .then(({url, recentArticle}) => {// go to result url
+            const match = recentArticle.match(/^(.+?)(\d+-\d+-\d+)$/);
+            if (match) {
+              const fileFullPath = `./_${id}/${sanitize(`${formatDate(match[2])}-${match[1]}.html`)}`;
+              console.log(fileFullPath);
+              if (fs.existsSync(fileFullPath)) {
+                return;
+              }
+            }
+            return nightmare
               .goto(url)
               .then(() => waitUntilNoVerify())
-          )
-          .then(() =>
-            nightmare
-              .wait(ARTICLE_TITLE)
-              .evaluate(function(selector) {
-                return {
-                  title: document.querySelector('.profile_nickname').innerText.trim(),
-                  description: document.querySelector('.profile_desc_value').innerText.trim(),
-                  count: document.querySelectorAll(selector).length,
-                };
-              }, ARTICLE_TITLE)
-              .then(({count, title, description}) => {
-                articleCount = count;
-                return createFeed(id, title, description); // create feed
-              })
-          )
+              .then(() =>
+                nightmare
+                  .wait(ARTICLE_TITLE)
+                  .evaluate(function(selector) {
+                    return {
+                      title: document.querySelector('.profile_nickname').innerText.trim(),
+                      description: document.querySelector('.profile_desc_value').innerText.trim(),
+                      count: document.querySelectorAll(selector).length,
+                    };
+                  }, ARTICLE_TITLE)
+                  .then(({count, title, description}) => {
+                    articleCount = count;
+                    return createFeed(id, title, description); // create feed
+                  })
+              )
+          })
           .then(() => // process articles
             processArticles(id, processingIndex, articleCount, cache_image)
           )
