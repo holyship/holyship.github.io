@@ -253,11 +253,11 @@ function crawl(feeds) {
             };
           }, SEARCH_RESULT_URL, RECENT_ARTICLE)
           .then(({url, recentArticle}) => {// go to result url
-            const match = recentArticle.match(/^(.+?)(\d+-\d+-\d+)$/);
+            const match = recentArticle.match(/^(.+?)(\d{4}-\d+-\d+)$/);
             if (match) {
               const fileFullPath = `./_${id}/${sanitize(`${formatDate(match[2])}-${match[1]}.html`)}`;
-              console.log(fileFullPath);
               if (fs.existsSync(fileFullPath)) {
+                console.log(`skip as the leatest is not updated: ${fileFullPath}`);
                 return;
               }
             }
@@ -279,10 +279,10 @@ function crawl(feeds) {
                     return createFeed(id, title, description); // create feed
                   })
               )
+              .then(() => // process articles
+                processArticles(id, processingIndex, articleCount, cache_image)
+              )
           })
-          .then(() => // process articles
-            processArticles(id, processingIndex, articleCount, cache_image)
-          )
         })
     , Promise.resolve())
     .catch(console.error)
