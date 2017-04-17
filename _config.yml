@@ -89,11 +89,6 @@ collections:
   AngelaTalk:
     cache_image: true
     output: true
-  # 读首诗再睡觉
-  # 订阅我不一定能除皱，但一定可以防衰老。每晚22:00，为你读首诗。
-  dushoushizaishuijiao:
-    cache_image: false
-    output: true
   # 大鹏的小影集
   # 用照片记录生活
   photobystan:

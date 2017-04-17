@@ -1,5 +1,11 @@
 const Nightmare = require('nightmare');
-const nightmare = Nightmare({ show: true });
+const nightmare = Nightmare({
+  show: true,
+  // switches: {
+  //   'proxy-server': '223.247.231.120:8998',
+  //   'ignore-certificate-errors': true
+  // }
+});
 const fs = require('fs');
 const yaml = require('js-yaml');
 const sanitize = require("sanitize-filename");
