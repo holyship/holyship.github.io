@@ -13,7 +13,8 @@ const SEARCH_BUTTON = 'input[type="button"][value="搜公众号"]';
 const SEARCH_RESULT_URL = '.news-box a[target="_blank"]';
 const ARTICLE_TITLE = '.weui_media_box h4';
 const ARTICLE_INFO = '.weui_media_box .weui_media_extra_info';
-const RECENT_ARTICLE = '.news-box dl:last-child dd';
+const RECENT_ARTICLE = '.news-box dl:last-child dd a';
+const RECENT_ARTICLE_TIME = '.news-box dl:last-child dd span';
 
 function writeFile(path, data) {
   return new Promise((resolve, reject) =>
@@ -127,8 +128,14 @@ function waitUntilNoVerify() {
     });
 }
 
+function pad0(x) {
+  if (x < 10) return `0${x}`;
+  return `${x}`;
+}
+
 function formatDate(dateStr) {
-  return new Date(dateStr + ' 0:0:0 +0000').toISOString().slice(0, 10);
+  const d = new Date(dateStr);
+  return `${d.getFullYear()}-${pad0(d.getMonth() + 1)}-${pad0(d.getDate())}`;
 }
 
 function getDateOnly(info) {
@@ -228,6 +235,23 @@ layout: null
   return writeFile(`./${id}.xml`, data);
 }
 
+function timeMatch(str) {
+  const hourMath = str.match(/^(\d+)小时前$/);
+  if (hourMath) {
+    return formatDate(Date.now() - (+hourMath[1]) * 3600 * 1000);
+  }
+  const dayMath = str.match(/^(\d+)天前$/);
+  if (dayMath) {
+    return formatDate(Date.now() - (+dayMath[1] + 1) * 3600 * 1000 * 24);
+  }
+  const dateMath = str.match(/^\d{4}-\d+-\d+$/);
+  if (dateMath) {
+    return formatDate(str);
+  }
+
+  return undefined;
+}
+
 function crawl(feeds) {
   return feeds
     .reduce((promise, {id, cache_image}, currentIndex) =>
@@ -246,16 +270,17 @@ function crawl(feeds) {
           .type(SEARCH_BOX_INPUT, id)
           .click(SEARCH_BUTTON)
           .wait(SEARCH_RESULT_URL)
-          .evaluate(function(resultUrl, recentArticle) {
+          .evaluate(function(resultUrl, recentArticle, time) {
             return {
               url: document.querySelector(resultUrl).href,
-              recentArticle: document.querySelector(recentArticle).innerText,
+              recentArticle: document.querySelector(recentArticle).innerText.trim(),
+              time: document.querySelector(time).innerText.trim(),
             };
-          }, SEARCH_RESULT_URL, RECENT_ARTICLE)
-          .then(({url, recentArticle}) => {// go to result url
-            const match = recentArticle.match(/^(.+?)(\d{4}-\d+-\d+)$/);
-            if (match) {
-              const fileFullPath = `./_${id}/${sanitize(`${formatDate(match[2])}-${match[1]}.html`)}`;
+          }, SEARCH_RESULT_URL, RECENT_ARTICLE, RECENT_ARTICLE_TIME)
+          .then(({url, recentArticle, time}) => {// go to result url
+            const timeStr = timeMatch(time);
+            if (timeStr) {
+              const fileFullPath = `./_${id}/${sanitize(`${timeStr}-${recentArticle}.html`)}`;
               if (fs.existsSync(fileFullPath)) {
                 console.log(`skip as the leatest is not updated: ${fileFullPath}`);
                 return;
