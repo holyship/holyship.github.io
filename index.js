@@ -12,6 +12,7 @@ const sanitize = require("sanitize-filename");
 const http = require('http');
 const https = require('https');
 const crypto = require('crypto');
+const glob = require("glob");
 
 const SEARCH_HOME = 'http://wx.sogou.com';
 const SEARCH_BOX_INPUT = 'input[name=query]';
@@ -19,6 +20,7 @@ const SEARCH_BUTTON = 'input[type="button"][value="搜公众号"]';
 const SEARCH_RESULT_URL = '.news-box a[target="_blank"]';
 const ARTICLE_TITLE = '.weui_media_box h4';
 const ARTICLE_INFO = '.weui_media_box .weui_media_extra_info';
+const RECENT_SIGNAL = '.news-box dl:last-child dt';
 const RECENT_ARTICLE = '.news-box dl:last-child dd a';
 const RECENT_ARTICLE_TIME = '.news-box dl:last-child dd span';
 
@@ -148,6 +150,19 @@ function getDateOnly(info) {
   return formatDate(info.split(/年|月|日|原创/).filter(v => v).join('-'));
 }
 
+function fileExist(patten) {
+  return new Promise((resolve, reject) => {
+    glob(patten, {}, function (error, files) {
+      if (error) {
+        reject(error);
+        return;
+      }
+      console.log(`${patten} : `, files);
+      resolve(files.length > 0);
+    });
+  });
+}
+
 function processArticles(id, processingIndex, cacheImage) {
   if (processingIndex < 0) return Promise.resolve();
   console.log(`start on #${processingIndex}`);
@@ -265,6 +280,7 @@ function crawl(feeds) {
       promise.then(() => {
         console.log(`=================== ${currentIndex} - ${id} ===================`)
         let articleCount;
+        let listUrl;
 
         const folder = `./_${id}`;
         if (!fs.existsSync(folder)) {
@@ -276,7 +292,11 @@ function crawl(feeds) {
           .type(SEARCH_BOX_INPUT, id)
           .click(SEARCH_BUTTON)
           .wait(SEARCH_RESULT_URL)
-          .evaluate(function(resultUrl, recentArticle, recentArticleTime) {
+          .evaluate(function(resultUrl, recentArticle, recentArticleTime, recentSignal) {
+            const recentSignalText = document.querySelector(recentSignal).innerText.trim();
+            if (recentSignalText !== '最近文章：') {
+              return { noUpdate: true };
+            }
             const article = document.querySelector(recentArticle);
             const time = document.querySelector(recentArticleTime);
             let result = {};
@@ -288,18 +308,30 @@ function crawl(feeds) {
             }
             result.url = document.querySelector(resultUrl).href
             return result;
-          }, SEARCH_RESULT_URL, RECENT_ARTICLE, RECENT_ARTICLE_TIME)
-          .then(({url, recentArticle, time}) => {// go to result url
+          }, SEARCH_RESULT_URL, RECENT_ARTICLE, RECENT_ARTICLE_TIME, RECENT_SIGNAL)
+          .then(({url, recentArticle, time, noUpdate}) => {// go to result url
+            listUrl = url;
+            if (noUpdate) {
+              console.log('no recent update');
+              return true;
+            }
             const timeStr = timeMatch(time);
             if (timeStr) {
-              const fileFullPath = `./_${id}/${sanitize(`${timeStr}-${recentArticle}.html`)}`;
-              if (fs.existsSync(fileFullPath)) {
-                console.log(`skip as the leatest is not updated: ${fileFullPath}`);
-                return;
-              }
+              const fileFullPath = `./_${id}/${
+                sanitize(`${timeStr}-${
+                  recentArticle.replace(/[\|\?\(\)\.,:!~]+/g, '__MATCHANY__')
+                }.html`).replace(/__MATCHANY__/g, '*')
+              }`;
+              return fileExist(fileFullPath);
+            }
+            return false;
+          })
+          .then((ship) => {
+            if (ship) {
+              return undefined;
             }
             return nightmare
-              .goto(url)
+              .goto(listUrl)
               .then(() => waitUntilNoVerify())
               .then(() =>
                 nightmare
