@@ -23,6 +23,8 @@ const ARTICLE_INFO = '.weui_media_box .weui_media_extra_info';
 const RECENT_SIGNAL = '.news-box dl:last-child dt';
 const RECENT_ARTICLE = '.news-box dl:last-child dd a';
 const RECENT_ARTICLE_TIME = '.news-box dl:last-child dd span';
+const FEED_TITLE = '.tit';
+const FEED_DESCRIPTION = '.news-box dl dd';
 
 function writeFile(path, data) {
   return new Promise((resolve, reject) =>
@@ -288,11 +290,9 @@ function crawl(feeds) {
           fs.mkdirSync(`${folder}/images`);
         }
         return nightmare
-          .goto(SEARCH_HOME)
-          .type(SEARCH_BOX_INPUT, id)
-          .click(SEARCH_BUTTON)
+          .goto(`http://wx.sogou.com/weixin?type=1&query=${id}&ie=utf8&s_from=input&_sug_=y&_sug_type_=`)
           .wait(SEARCH_RESULT_URL)
-          .evaluate(function(resultUrl, recentArticle, recentArticleTime, recentSignal) {
+          .evaluate(function(resultUrl, recentArticle, recentArticleTime, recentSignal, titleSelector, desSelector) {
             const recentSignalText = document.querySelector(recentSignal).innerText.trim();
             if (recentSignalText !== '最近文章：') {
               return { noUpdate: true };
@@ -302,14 +302,17 @@ function crawl(feeds) {
             let result = {};
             if (article && time) {
               result = {
+                title: document.querySelector(titleSelector).innerText.trim(),
+                description: document.querySelector(desSelector).innerText.trim(),
                 recentArticle: article.innerText.trim(),
                 time: time.innerText.trim(),
               }
             }
             result.url = document.querySelector(resultUrl).href
             return result;
-          }, SEARCH_RESULT_URL, RECENT_ARTICLE, RECENT_ARTICLE_TIME, RECENT_SIGNAL)
-          .then(({url, recentArticle, time, noUpdate}) => {// go to result url
+          }, SEARCH_RESULT_URL, RECENT_ARTICLE, RECENT_ARTICLE_TIME, RECENT_SIGNAL, FEED_TITLE, FEED_DESCRIPTION)
+          .then(({url, recentArticle, time, noUpdate, title, description}) => {// go to result url
+            createFeed(id, title, description); // create feed
             listUrl = url;
             if (noUpdate) {
               console.log('no recent update');
@@ -345,7 +348,6 @@ function crawl(feeds) {
                   }, ARTICLE_TITLE)
                   .then(({count, title, description}) => {
                     articleCount = count;
-                    return createFeed(id, title, description); // create feed
                   })
               )
               .then(() => // process articles
