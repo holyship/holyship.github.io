@@ -245,9 +245,9 @@ layout: null
     <title>{{ post.title | xml_escape }}</title>
     <updated>{{ post.date | date_to_xmlschema }}</updated>
     <author>
-      <name>{{ post.author }}</name>
+      <name>{{ post.author | xml_escape }}</name>
     </author>
-    <content type="html">{{ post.content | xml_escape }}</content>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
   </entry>
   {% endfor %}
 
