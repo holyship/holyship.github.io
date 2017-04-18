@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>微软丹棱街5号</title>
+  <description>微软亚太研发集团官方账号,也是微软与极客朋友们分享黑科技、互动交流的第一窗口.欢迎走进丹棱街5号,探索科技力量,感悟澎湃创新!</description>
+  <link href="/Microsoft_ARD.xml"/>
+  <link type="application/atom+xml" rel="self" href="/Microsoft_ARD.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>Microsoft_ARD</id>
+
+  {% for post in site.Microsoft_ARD %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

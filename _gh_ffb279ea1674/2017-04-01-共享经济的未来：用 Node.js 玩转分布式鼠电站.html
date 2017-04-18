@@ -1,0 +1,127 @@
+---
+title: 共享经济的未来：用 Node.js 玩转分布式鼠电站
+author: 月影
+date: '2017-04-01 00:00:00 +0000'
+
+---
+
+{% raw  %}
+<div class="" data-md-url="https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit&amp;action=edit&amp;type=10&amp;appmsgid=503480760&amp;token=1273671613&amp;lang=zh_CN" markdown-here-wrapper-content-modified="true"><p><img src="/gh_ffb279ea1674/images/76cfaa991a7d0cf3e70c05ad3da22be3fd9b3ac6.png" style="width: 770px !important; height: 433.125px !important; visibility: visible !important;"></p><p style="margin: 0px 0px 1.2em !important;">当今社会，许多人喜欢养宠物陪伴自己和家人。而仓鼠以其可爱的外表、爱干净的习性和温顺可爱的性格成为许多城市家庭养宠物的选择。</p><p style="margin: 0px 0px 1.2em !important;">在这个物联网时代，共享经济是人类发展的未来。让可爱的小仓鼠不仅仅能作为卖萌讨巧的宠物，还可以发挥其经济价值，为家庭做出贡献，正是新的万维物联网（Web of Things）云平台将要做的事情。</p><p><img src="/gh_ffb279ea1674/images/0c410bbd74448bd8e69384c1f981a74bdb036777.png" style="width: 700px !important; height: 686px !important; visibility: visible !important;"></p><h2 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.4em; border-bottom: 1px solid rgb(238, 238, 238);">家庭分布式鼠电站</h2><p style="margin: 0px 0px 1.2em !important;">要安装家庭分布式鼠电站，你需要购买一块<a>树莓派</a>、一个特制的终端仓鼠滚筒（google 搜索 ep hamster roller）：</p><p><img src="/gh_ffb279ea1674/images/4cc309f1aeda1f764fc7847e3ef745e049963456.png" style="width: 770px !important; height: 577.5px !important;"></p><p style="margin: 0px 0px 1.2em !important;">将仓鼠滚筒的电流输出端接入一个移动电源，比如<a>这一款</a>，将信号输出端接入树莓派 GPIO 的 18、29、30 三个引脚，如果你不知道什么是 GPIO，可以参考<a>这一篇文章</a>。</p><p style="margin: 0px 0px 1.2em !important;">这样，当你的仓鼠在滚筒里奔跑的时候，你的移动电源的电量就会增加，同时，仓鼠活动产生的电量数据就会通过信号输出端发送到树莓派。</p><p style="margin: 0px 0px 1.2em !important;">接下来，我们要在树莓派上对应的安装 npm 包（如果你还没在你的树莓派上安装 Node，请先安装 Node.js 到你的树莓派上！）：</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code class="" style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;white-space: pre; overflow: auto; border-radius: 3px; border: 1px solid rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220); text-size-adjust: none;">$ npm install -g hamster-elec</code></pre><p style="margin: 0px 0px 1.2em !important;">这样你就安装了鼠电模块，接下来，在运行它之前，我们需要配置一下：</p><p style="margin: 0px 0px 1.2em !important;">先到 APP Store 下载应用“仓鼠电桩”，然后打开仓鼠电桩 APP，将你的仓鼠丢进智能滚筒（注意：一次只能丢一只！），用你的 APP 扫一扫，就会得到你的仓鼠 ID。用你的仓鼠 ID 启动 hamster-elec 服务：</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code class="" style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;white-space: pre; overflow: auto; border-radius: 3px; border: 1px solid rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220); text-size-adjust: none;">$ hamster-elec --hid=&lt;你的仓鼠ID&gt; -p &lt;端口&gt; start</code></pre><p style="margin: 0px 0px 1.2em !important;">你会看到如下输出信息：</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code class="" style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;white-space: pre; overflow: auto; border-radius: 3px; border: 1px solid rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220); text-size-adjust: none;">hamster &amp; rice launched! at port &lt;端口&gt;</code></pre><p style="margin: 0px 0px 1.2em !important;">然后你在局域网内访问 <code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;">http://raspberrypi.local:7777</code> 就能看到你的仓鼠发电的情况。</p><p style="margin: 0px 0px 1.2em !important;">如果你打开“仓鼠电桩” APP，你也能实时看到仓鼠发电的情况，当然前提是你的手机连接的网络和你的树莓派是在同一个局域网里。</p><h3 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.3em;">同步数据到云端</h3><p style="margin: 0px 0px 1.2em !important;">经过上面的配置，虽然你在本地可以访问你的 APP 或者树莓派 URL 来查看你的仓鼠发电情况，但是如果你想随时随地查看家里的仓鼠发电情况，我们就需要将它同步到云端。</p><p style="margin: 0px 0px 1.2em !important;">而这也很容易做到，我们已经实现了一个记录和同步发电数据的 REST API。你只需要：</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code class="" style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;white-space: pre; overflow: auto; border-radius: 3px; border: 1px solid rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220); text-size-adjust: none;">curl -X PUT <span class="" style="color: rgb(204, 147, 147);">"https://qiwoo.org/hamster/actions/_setStatus"</span> \
+ &nbsp; &nbsp; -H <span class="" style="color: rgb(204, 147, 147);">"Authorization: 仓鼠 ID"</span> \
+ &nbsp; &nbsp; -H <span class="" style="color: rgb(204, 147, 147);">"Content-Type: application/json"</span> \<br> &nbsp; &nbsp; <span class="">-d</span> <span class="" style="color: rgb(204, 147, 147);">'{ "type": "_setStatus", "elec":"电量值"}'</span></code></pre><p style="margin: 0px 0px 1.2em !important;">就可以更新数值到云端。</p><p style="margin: 0px 0px 1.2em !important;">当然，这个我们需要做成自动的，所以，我们需要手动调用 hamster-elec 模块：</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code class="" style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;white-space: pre; overflow: auto; border-radius: 3px; border: 1px solid rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220); text-size-adjust: none;"><span class="" style="color: rgb(227, 206, 171);">const</span> hamsterServer = <span class="" style="color: rgb(204, 147, 147);">require</span>(<span class="" style="color: rgb(204, 147, 147);">'hamster-elec'</span>).Server;<br><span class="" style="color: rgb(227, 206, 171);">const</span> hamsterID = <span class="" style="color: rgb(204, 147, 147);">'&lt;你的仓鼠ID&gt;'</span>;<br><span class="" style="color: rgb(227, 206, 171);">const</span> cloud = <span class="" style="color: rgb(204, 147, 147);">'https://qiwoo.org/hamster/actions/_setStatus'</span>;
+
+hamsterServer.creater((req, res) =&gt; {<span class="" style="color: rgb(127, 159, 127);">//... 处理服务</span>});
+
+hamsterServer.on(<span class="" style="color: rgb(204, 147, 147);">'electricity generation'</span>, (err, power) =&gt; {<br>
+ &nbsp; &nbsp;<span class="" style="color: rgb(227, 206, 171);">if</span>(err) <span class="" style="color: rgb(227, 206, 171);">throw</span> <span class="" style="color: rgb(227, 206, 171);">new</span> <span class="" style="color: rgb(204, 147, 147);">Error</span>(err);
+
+ &nbsp; &nbsp;request.put({
+ &nbsp; &nbsp; &nbsp; &nbsp;url: cloud,
+ &nbsp; &nbsp; &nbsp; &nbsp;headers: {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Authorization: hamsterID,
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Content-Type: <span class="" style="color: rgb(204, 147, 147);">"application/json"</span>
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp;}, {<span class="" style="color: rgb(204, 147, 147);">"type"</span>: <span class="" style="color: rgb(204, 147, 147);">"_setStatus"</span>, <span class="" style="color: rgb(204, 147, 147);">"elec"</span>: power});
+});
+hamsterServer.listener(<span class="" style="color: rgb(140, 208, 211);">7777</span>);</code></pre><p style="margin: 0px 0px 1.2em !important;">这样，一旦仓鼠开始发电，电量的变化就会被发送到云端。</p><h3 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.3em;">其他问题</h3><ul style="margin: 1.2em 0px;padding-left: 2em;" class="list-paddingleft-2"><li>Q: 我的仓鼠吃吃睡睡，不去滚筒里跑，发不了电怎么办？</li><li>A: 正常的情况，小家伙心情好了自然会去发电了，不能强求。</li><li>Q: 我家仓鼠发了很多电，但是移动电源还是没电是怎么回事？</li><li>A: 检查移动电源和滚筒的连接，接触不良会导致电量损耗，另外移动电源自身质量不佳也会导致问题。</li><li>Q: 我家有多只仓鼠，能不能同时发电。</li><li>A: 暂不支持，但该需求已经列入开发计划。将来会支持的。</li></ul><h3 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.3em;">总结</h3><p style="margin: 0px 0px 1.2em !important;">喂饱你的仓鼠，它会给你带来惊喜。</p><p><img src="/gh_ffb279ea1674/images/630f57e21070b0be17f71f9051828c847e5ee267.png" style="width: 512px !important; height: 384px !important;"></p><div title="MDH:PHA+IVtdKGh0dHBzOi8vcC5zc2wucWhpbWcuY29tL3QwMWIwNzg1YzEwMjMwMzlkNzguanBnKTwv
+cD48cD48YnI+PC9wPjxwPuW9k+S7iuekvuS8mu+8jOiuuOWkmuS6uuWWnOasouWFu+WuoOeJqemZ
+quS8tOiHquW3seWSjOWutuS6uuOAguiAjOS7k+m8oOS7peWFtuWPr+eIseeahOWkluihqOOAgeeI
+seW5suWHgOeahOS5oOaAp+WSjOa4qemhuuWPr+eIseeahOaAp+agvOaIkOS4uuiuuOWkmuWfjuW4
+guWutuW6reWFu+WuoOeJqeeahOmAieaLqeOAgjwvcD48cD48YnI+PC9wPjxwPuWcqOi/meS4queJ
+qeiBlOe9keaXtuS7o++8jOWFseS6q+e7j+a1juaYr+S6uuexu+WPkeWxleeahOacquadpeOAguiu
+qeWPr+eIseeahOWwj+S7k+m8oOS4jeS7heS7heiDveS9nOS4uuWNluiQjOiuqOW3p+eahOWuoOeJ
+qe+8jOi/mOWPr+S7peWPkeaMpeWFtue7j+a1juS7t+WAvO+8jOS4uuWutuW6reWBmuWHuui0oeeM
+ru+8jOato+aYr+aWsOeahOS4h+e7tOeJqeiBlOe9ke+8iFdlYiBvZiBUaGluZ3PvvInkupHlubPl
+j7DlsIbopoHlgZrnmoTkuovmg4XjgII8L3A+PHA+PGJyPjwvcD48cD4mbHQ7IS0tbW9yZS0tJmd0
+OzwvcD48cD48YnI+PC9wPjxwPiFbXShodHRwczovL3Auc3NsLnFoaW1nLmNvbS90MDE2Njg3ZjJm
+YjZjODYxMTU5LmpwZyk8L3A+PHA+PGJyPjwvcD48cD4jIyDlrrbluq3liIbluIPlvI/pvKDnlLXn
+q5k8L3A+PHA+PGJyPjwvcD48cD7opoHlronoo4Xlrrbluq3liIbluIPlvI/pvKDnlLXnq5nvvIzk
+vaDpnIDopoHotK3kubDkuIDlnZdb5qCR6I6T5rS+XShodHRwOi8vYmFpa2Uuc28uY29tL2RvYy82
+MjQwMDU5LTY0NTM0MzYuaHRtbCnjgIHkuIDkuKrnibnliLbnmoTnu4jnq6/ku5PpvKDmu5rnrZLv
+vIhnb29nbGUg5pCc57SiIGVwIGhhbXN0ZXIgcm9sbGVy77yJ77yaPC9wPjxwPjxicj48L3A+PHA+
+IVtdKGh0dHBzOi8vcC5zc2wucWhpbWcuY29tL3QwMWNlNGZmYmFiMmNhZjYzNmIuanBnKTwvcD48
+cD48YnI+PC9wPjxwPuWwhuS7k+m8oOa7muetkueahOeUtea1gei+k+WHuuerr+aOpeWFpeS4gOS4
+quenu+WKqOeUtea6kO+8jOavlOWmglvov5nkuIDmrL5dKGh0dHBzOi8vaXRlbS5qZC5jb20vMTEz
+Mzk5ODg0NDQuaHRtbCnvvIzlsIbkv6Hlj7fovpPlh7rnq6/mjqXlhaXmoJHojpPmtL4gR1BJTyDn
+moQgMTjjgIEyOeOAgTMwIOS4ieS4quW8leiEmu+8jOWmguaenOS9oOS4jeefpemBk+S7gOS5iOaY
+ryBHUElP77yM5Y+v5Lul5Y+C6ICDW+i/meS4gOevh+aWh+eroF0oaHR0cHM6Ly93d3cuaDVqdW4u
+Y29tL3Bvc3QvcmFzcGJlcnJ5LXBpLmh0bWwp44CCPC9wPjxwPjxicj48L3A+PHA+6L+Z5qC377yM
+5b2T5L2g55qE5LuT6byg5Zyo5rua562S6YeM5aWU6LeR55qE5pe25YCZ77yM5L2g55qE56e75Yqo
+55S15rqQ55qE55S16YeP5bCx5Lya5aKe5Yqg77yM5ZCM5pe277yM5LuT6byg5rS75Yqo5Lqn55Sf
+55qE55S16YeP5pWw5o2u5bCx5Lya6YCa6L+H5L+h5Y+36L6T5Ye656uv5Y+R6YCB5Yiw5qCR6I6T
+5rS+44CCPC9wPjxwPjxicj48L3A+PHA+5o6l5LiL5p2l77yM5oiR5Lus6KaB5Zyo5qCR6I6T5rS+
+5LiK5a+55bqU55qE5a6J6KOFIG5wbSDljIXvvIjlpoLmnpzkvaDov5jmsqHlnKjkvaDnmoTmoJHo
+jpPmtL7kuIrlronoo4UgTm9kZe+8jOivt+WFiOWuieijhSBOb2RlLmpzIOWIsOS9oOeahOagkeiO
+k+a0vuS4iu+8ge+8ie+8mjwvcD48cD48YnI+PC9wPjxwPmBgYGJhc2g8L3A+PHA+JCBucG0gaW5z
+dGFsbCAtZyBoYW1zdGVyLWVsZWM8L3A+PHA+YGBgPC9wPjxwPjxicj48L3A+PHA+6L+Z5qC35L2g
+5bCx5a6J6KOF5LqG6byg55S15qih5Z2X77yM5o6l5LiL5p2l77yM5Zyo6L+Q6KGM5a6D5LmL5YmN
+77yM5oiR5Lus6ZyA6KaB6YWN572u5LiA5LiL77yaPC9wPjxwPjxicj48L3A+PHA+5YWI5YiwIEFQ
+UCBTdG9yZSDkuIvovb3lupTnlKjigJzku5PpvKDnlLXmoanigJ3vvIznhLblkI7miZPlvIDku5Pp
+vKDnlLXmoakgQVBQ77yM5bCG5L2g55qE5LuT6byg5Lii6L+b5pm66IO95rua562S77yI5rOo5oSP
+77ya5LiA5qyh5Y+q6IO95Lii5LiA5Y+q77yB77yJ77yM55So5L2g55qEIEFQUCDmiavkuIDmiavv
+vIzlsLHkvJrlvpfliLDkvaDnmoTku5PpvKAgSUTjgILnlKjkvaDnmoTku5PpvKAgSUQg5ZCv5Yqo
+IGhhbXN0ZXItZWxlYyDmnI3liqHvvJo8L3A+PHA+PGJyPjwvcD48cD5gYGBiYXNoPC9wPjxwPiQg
+aGFtc3Rlci1lbGVjIC0taGlkPSZsdDvkvaDnmoTku5PpvKBJRCZndDsgLXAgJmx0O+err+WPoyZn
+dDsgc3RhcnQ8L3A+PHA+YGBgPC9wPjxwPjxicj48L3A+PHA+5L2g5Lya55yL5Yiw5aaC5LiL6L6T
+5Ye65L+h5oGv77yaPC9wPjxwPjxicj48L3A+PHA+YGBgYmFzaDwvcD48cD5oYW1zdGVyICZhbXA7
+IHJpY2UgbGF1bmNoZWQhIGF0IHBvcnQgJmx0O+err+WPoyZndDs8L3A+PHA+YGBgPC9wPjxwPjxi
+cj48L3A+PHA+54S25ZCO5L2g5Zyo5bGA5Z+f572R5YaF6K6/6ZeuIGBodHRwOi8vcmFzcGJlcnJ5
+cGkubG9jYWw6Nzc3N2Ag5bCx6IO955yL5Yiw5L2g55qE5LuT6byg5Y+R55S155qE5oOF5Ya144CC
+PC9wPjxwPjxicj48L3A+PHA+5aaC5p6c5L2g5omT5byA4oCc5LuT6byg55S15qGp4oCdIEFQUO+8
+jOS9oOS5n+iDveWunuaXtueci+WIsOS7k+m8oOWPkeeUteeahOaDheWGte+8jOW9k+eEtuWJjeaP
+kOaYr+S9oOeahOaJi+acuui/nuaOpeeahOe9kee7nOWSjOS9oOeahOagkeiOk+a0vuaYr+WcqOWQ
+jOS4gOS4quWxgOWfn+e9kemHjOOAgjwvcD48cD48YnI+PC9wPjxwPiMjIyDlkIzmraXmlbDmja7l
+iLDkupHnq688L3A+PHA+PGJyPjwvcD48cD7nu4/ov4fkuIrpnaLnmoTphY3nva7vvIzomb3nhLbk
+vaDlnKjmnKzlnLDlj6/ku6Xorr/pl67kvaDnmoQgQVBQIOaIluiAheagkeiOk+a0viBVUkwg5p2l
+5p+l55yL5L2g55qE5LuT6byg5Y+R55S15oOF5Ya177yM5L2G5piv5aaC5p6c5L2g5oOz6ZqP5pe2
+6ZqP5Zyw5p+l55yL5a626YeM55qE5LuT6byg5Y+R55S15oOF5Ya177yM5oiR5Lus5bCx6ZyA6KaB
+5bCG5a6D5ZCM5q2l5Yiw5LqR56uv44CCPC9wPjxwPjxicj48L3A+PHA+6ICM6L+Z5Lmf5b6I5a65
+5piT5YGa5Yiw77yM5oiR5Lus5bey57uP5a6e546w5LqG5LiA5Liq6K6w5b2V5ZKM5ZCM5q2l5Y+R
+55S15pWw5o2u55qEIFJFU1QgQVBJ44CC5L2g5Y+q6ZyA6KaB77yaPC9wPjxwPjxicj48L3A+PHA+
+YGBgYmFzaDwvcD48cD5jdXJsIC1YIFBVVCAiaHR0cHM6Ly9xaXdvby5vcmcvaGFtc3Rlci9hY3Rp
+b25zL19zZXRTdGF0dXMiIFw8L3A+PHA+Jm5ic3A7ICZuYnNwOyAmbmJzcDstSCAiQXV0aG9yaXph
+dGlvbjog5LuT6bygIElEIiBcPC9wPjxwPiZuYnNwOyAmbmJzcDsgJm5ic3A7LUggIkNvbnRlbnQt
+VHlwZTogYXBwbGljYXRpb24vanNvbiIgXDwvcD48cD4mbmJzcDsgJm5ic3A7ICZuYnNwOy1kICd7
+ICJ0eXBlIjogIl9zZXRTdGF0dXMiLCAiZWxlYyI6IueUtemHj+WAvCJ9JzwvcD48cD5gYGA8L3A+
+PHA+PGJyPjwvcD48cD7lsLHlj6/ku6Xmm7TmlrDmlbDlgLzliLDkupHnq6/jgII8L3A+PHA+PGJy
+PjwvcD48cD7lvZPnhLbvvIzov5nkuKrmiJHku6zpnIDopoHlgZrmiJDoh6rliqjnmoTvvIzmiYDk
+u6XvvIzmiJHku6zpnIDopoHmiYvliqjosIPnlKggaGFtc3Rlci1lbGVjIOaooeWdl++8mjwvcD48
+cD48YnI+PC9wPjxwPmBgYGpzPC9wPjxwPmNvbnN0IGhhbXN0ZXJTZXJ2ZXIgPSByZXF1aXJlKCdo
+YW1zdGVyLWVsZWMnKS5TZXJ2ZXI7PC9wPjxwPmNvbnN0IGhhbXN0ZXJJRCA9ICcmbHQ75L2g55qE
+5LuT6bygSUQmZ3Q7Jzs8L3A+PHA+Y29uc3QgY2xvdWQgPSAnaHR0cHM6Ly9xaXdvby5vcmcvaGFt
+c3Rlci9hY3Rpb25zL19zZXRTdGF0dXMnOzwvcD48cD48YnI+PC9wPjxwPmhhbXN0ZXJTZXJ2ZXIu
+Y3JlYXRlcigocmVxLCByZXMpID0mZ3Q7IHs8L3A+PHA+Ly8uLi4g5aSE55CG5pyN5YqhPC9wPjxw
+Pn0pOzwvcD48cD48YnI+PC9wPjxwPmhhbXN0ZXJTZXJ2ZXIub24oJ2VsZWN0cmljaXR5IGdlbmVy
+YXRpb24nLCAoZXJyLCBwb3dlcikgPSZndDsgezwvcD48cD48c3BhbiBjbGFzcz0iQXBwbGUtdGFi
+LXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTpwcmUiPgk8L3NwYW4+aWYoZXJyKSB0aHJvdyBuZXcg
+RXJyb3IoZXJyKTs8L3A+PHA+PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFuIiBzdHlsZT0id2hp
+dGUtc3BhY2U6cHJlIj4JPC9zcGFuPjwvcD48cD48c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4i
+IHN0eWxlPSJ3aGl0ZS1zcGFjZTpwcmUiPgk8L3NwYW4+cmVxdWVzdC5wdXQoezwvcD48cD48c3Bh
+biBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTpwcmUiPgkJPC9zcGFu
+PnVybDogY2xvdWQsPC9wPjxwPjxzcGFuIGNsYXNzPSJBcHBsZS10YWItc3BhbiIgc3R5bGU9Indo
+aXRlLXNwYWNlOnByZSI+CQk8L3NwYW4+aGVhZGVyczogezwvcD48cD48c3BhbiBjbGFzcz0iQXBw
+bGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTpwcmUiPgkJCTwvc3Bhbj5BdXRob3JpemF0
+aW9uOiBoYW1zdGVySUQsPC9wPjxwPjxzcGFuIGNsYXNzPSJBcHBsZS10YWItc3BhbiIgc3R5bGU9
+IndoaXRlLXNwYWNlOnByZSI+CQkJPC9zcGFuPkNvbnRlbnQtVHlwZTogImFwcGxpY2F0aW9uL2pz
+b24iPC9wPjxwPjxzcGFuIGNsYXNzPSJBcHBsZS10YWItc3BhbiIgc3R5bGU9IndoaXRlLXNwYWNl
+OnByZSI+CQk8L3NwYW4+fTwvcD48cD48c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxl
+PSJ3aGl0ZS1zcGFjZTpwcmUiPgk8L3NwYW4+fSwgeyJ0eXBlIjogIl9zZXRTdGF0dXMiLCAiZWxl
+YyI6IHBvd2VyfSk7PC9wPjxwPn0pOzwvcD48cD5oYW1zdGVyU2VydmVyLmxpc3RlbmVyKDc3Nzcp
+OzwvcD48cD5gYGA8L3A+PHA+PGJyPjwvcD48cD7ov5nmoLfvvIzkuIDml6bku5PpvKDlvIDlp4vl
+j5HnlLXvvIznlLXph4/nmoTlj5jljJblsLHkvJrooqvlj5HpgIHliLDkupHnq6/jgII8L3A+PHA+
+PGJyPjwvcD48cD4jIyMg5YW25LuW6Zeu6aKYPC9wPjxwPjxicj48L3A+PHA+LSBROiDmiJHnmoTk
+u5PpvKDlkIPlkIPnnaHnnaHvvIzkuI3ljrvmu5rnrZLph4zot5HvvIzlj5HkuI3kuobnlLXmgI7k
+uYjlip7vvJ88L3A+PHA+LSBBOiDmraPluLjnmoTmg4XlhrXvvIzlsI/lrrbkvJnlv4Pmg4Xlpb3k
+uoboh6rnhLbkvJrljrvlj5HnlLXkuobvvIzkuI3og73lvLrmsYLjgII8L3A+PHA+LSBROiDmiJHl
+rrbku5PpvKDlj5HkuoblvojlpJrnlLXvvIzkvYbmmK/np7vliqjnlLXmupDov5jmmK/msqHnlLXm
+mK/mgI7kuYjlm57kuovvvJ88L3A+PHA+LSBBOiDmo4Dmn6Xnp7vliqjnlLXmupDlkozmu5rnrZLn
+moTov57mjqXvvIzmjqXop6bkuI3oia/kvJrlr7zoh7TnlLXph4/mjZ/ogJfvvIzlj6blpJbnp7vl
+iqjnlLXmupDoh6rouqvotKjph4/kuI3kvbPkuZ/kvJrlr7zoh7Tpl67popjjgII8L3A+PHA+LSBR
+OiDmiJHlrrbmnInlpJrlj6rku5PpvKDvvIzog73kuI3og73lkIzml7blj5HnlLXjgII8L3A+PHA+
+LSBBOiDmmoLkuI3mlK/mjIHvvIzkvYbor6XpnIDmsYLlt7Lnu4/liJflhaXlvIDlj5HorqHliJLj
+gILlsIbmnaXkvJrmlK/mjIHnmoTjgII8L3A+PHA+PGJyPjwvcD48cD4jIyMg5oC757uTPC9wPjxw
+Pjxicj48L3A+PHA+5ZaC6aWx5L2g55qE5LuT6byg77yM5a6D5Lya57uZ5L2g5bim5p2l5oOK5Zac
+44CCPC9wPjxwPjxicj48L3A+PHA+IVtdKGh0dHBzOi8vcC5zc2wucWhpbWcuY29tL3QwMWM0MGMz
+NmRhMWNkYTVjMmQuanBnKTwvcD48cD7igIs8YnI+PC9wPg==" style="height:0;width:0;max-height:0;max-width:0;overflow:hidden;font-size:0em;padding:0;margin:0;"></div></div>
+{% endraw  %}
+

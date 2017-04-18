@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>程序人生</title>
+  <description>十年漫漫程序人生,打过各种杂,也做过让我骄傲的软件;管理过数十人的团队,还带领一班兄弟姐妹创过业,目前在硅谷一家创业公司担任 VP.关注程序人生,了解程序猿,学做程序猿,做好程序猿,让我们的程序人生精...</description>
+  <link href="/programmer_life.xml"/>
+  <link type="application/atom+xml" rel="self" href="/programmer_life.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>programmer_life</id>
+
+  {% for post in site.programmer_life %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

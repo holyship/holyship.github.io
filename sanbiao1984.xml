@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>三表龙门阵</title>
+  <description>负责吐槽一切!互联网大喷壶,大嘴善喷喷天下可喷之事!</description>
+  <link href="/sanbiao1984.xml"/>
+  <link type="application/atom+xml" rel="self" href="/sanbiao1984.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>sanbiao1984</id>
+
+  {% for post in site.sanbiao1984 %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

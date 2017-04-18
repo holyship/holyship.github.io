@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>嘀嗒嘀嗒</title>
+  <description>感谢订阅,我是朱赟,也叫 angela,很多人叫我安姐.硅谷 Airbnb Staff Engineer.希望透过女码工的视角为您讲述硅谷技术人的故事和思考.</description>
+  <link href="/AngelaTalk.xml"/>
+  <link type="application/atom+xml" rel="self" href="/AngelaTalk.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>AngelaTalk</id>
+
+  {% for post in site.AngelaTalk %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

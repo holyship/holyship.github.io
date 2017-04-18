@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>小道消息</title>
+  <description>在这里,我想为你呈现一幅中国互联网的清明上河图.</description>
+  <link href="/WebNotes.xml"/>
+  <link type="application/atom+xml" rel="self" href="/WebNotes.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>WebNotes</id>
+
+  {% for post in site.WebNotes %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>趣火星</title>
+  <description>大家好,我是许妙成,趣火星原来是我的创业项目,现在是我的个人blog,希望可以和大家分享一些和人文、科技、商业相关的信息.BP传送门:xumiaocheng@unityvc.com</description>
+  <link href="/gohuoxing.xml"/>
+  <link type="application/atom+xml" rel="self" href="/gohuoxing.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>gohuoxing</id>
+
+  {% for post in site.gohuoxing %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

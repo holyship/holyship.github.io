@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>微软小娜</title>
+  <description>微软小娜(Cortana)是微软发布的全球第一款跨平台智能个人助理.关注即可及时了解最新技能更新,随时提供反馈建议,未来的人工智能将有你的智慧.</description>
+  <link href="/MS_Cortana.xml"/>
+  <link type="application/atom+xml" rel="self" href="/MS_Cortana.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>MS_Cortana</id>
+
+  {% for post in site.MS_Cortana %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

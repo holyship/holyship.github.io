@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>灵雀云</title>
+  <description>灵雀云是中国第一家基于容器,服务于完整开发周期的新一代云平台.灵雀云以容器这个新一代应用交付件为中心,全方位支持云端应用创建、编译、集成、部署、运行的每一个环节.</description>
+  <link href="/AlaudaCloud.xml"/>
+  <link type="application/atom+xml" rel="self" href="/AlaudaCloud.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>AlaudaCloud</id>
+
+  {% for post in site.AlaudaCloud %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

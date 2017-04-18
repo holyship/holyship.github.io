@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>飞总的IT世界面面观</title>
+  <description>飞总,旅居西雅图的浙江人,IT人士,08年起从事大数据相关的基础构架的研究和开发,素爱读书,博闻强识,对计算机行业和前沿技术的发展有深刻和独到的见解,希望通过这个平台分享他关于IT世界的的心得体会.</description>
+  <link href="/feiitworld.xml"/>
+  <link type="application/atom+xml" rel="self" href="/feiitworld.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>feiitworld</id>
+
+  {% for post in site.feiitworld %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

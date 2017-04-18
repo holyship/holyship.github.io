@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>WeMobileDev</title>
+  <description>微信移动客户端开发团队官号,分享微信在Android、iOS、Mac、Winphone、Windows等平台的开发经验、前沿技术,以及一些鲜为人知的小故事.</description>
+  <link href="/WeMobileDev.xml"/>
+  <link type="application/atom+xml" rel="self" href="/WeMobileDev.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>WeMobileDev</id>
+
+  {% for post in site.WeMobileDev %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

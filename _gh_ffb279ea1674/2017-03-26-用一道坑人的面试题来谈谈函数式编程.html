@@ -1,0 +1,103 @@
+---
+title: 用一道坑人的面试题来谈谈函数式编程
+author: 月影
+date: '2017-03-26 00:00:00 +0000'
+
+---
+
+{% raw  %}
+<div class="" data-md-url="https://mp.weixin.qq.com/cgi-bin/appmsg?t=media/appmsg_edit_v2&amp;action=edit&amp;isNew=1&amp;type=10&amp;lang=zh_CN&amp;token=1127944252" markdown-here-wrapper-content-modified="true"><p><img src="/gh_ffb279ea1674/images/7a20ed35b1cde4abda13bd16d2486d561347e9b7.png" style="width: 690px !important; height: 524px !important; visibility: visible !important;"></p><p style="margin: 0px 0px 1.2em !important;">一道著名的坑人题，可能一些同学见过：</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code class="" style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;white-space: pre; overflow: auto; border-radius: 3px; border: 1px solid rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220); text-size-adjust: none;">[<span class="" style="color: rgb(204, 147, 147);">'2'</span>, <span class="" style="color: rgb(204, 147, 147);">'3'</span>, <span class="" style="color: rgb(204, 147, 147);">'4'</span>].map(<span class="" style="color: rgb(204, 147, 147);">parseInt</span>);</code></pre><p style="margin: 0px 0px 1.2em !important;">说出上面代码的执行结果。</p><p style="margin: 0px 0px 1.2em !important;">如果不过脑子的说是 <code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;">[2, 3, 4]</code>，那么肯定是错了。实际上，真正的执行结果是 <code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;">[2, NaN, NaN]</code>。为什么会这样呢？是因为 map 的算子是有两个参数的，第一个参数是被迭代数组的元素，第二个参数是该元素的下标。所以 <code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;">['2', '3', '4'].map(parseInt)</code> 实际上相当于执行了 <code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;">[parseInt('2', 0), parseInt('3', 1), parseInt('4', 2)]</code>，结果就变成了 <code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;">[2, NaN, NaN]</code> 了。</p><p style="margin: 0px 0px 1.2em !important;">今天我们在这里主要不是讨论为什么 <code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;">parseInt('2', 0)</code> 是 2，而 <code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;">parseInt('3', 1)</code> 是 NaN，实际上我们期望的结果应该是 <code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;">parseInt('2', 10)</code> 和 <code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;">parseInt('3', 10)</code>，把字符串 ‘2’、’3’ 转成十进制 number。</p><p style="margin: 0px 0px 1.2em !important;">所以，正确的写法应该是：</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code class="" style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;white-space: pre; overflow: auto; border-radius: 3px; border: 1px solid rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220); text-size-adjust: none;">[<span class="" style="color: rgb(204, 147, 147);">'2'</span>, <span class="" style="color: rgb(204, 147, 147);">'3'</span>, <span class="" style="color: rgb(204, 147, 147);">'4'</span>].map(num =&gt; <span class="" style="color: rgb(204, 147, 147);">parseInt</span>(num, <span class="" style="color: rgb(140, 208, 211);">10</span>));</code></pre><p style="margin: 0px 0px 1.2em !important;">上面这个写法对于这个问题来说是简单的，和函数式编程关系不大。但是，这个问题如果用过程抽象的思路通用化思考，应该是这样的：</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code class="" style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;white-space: pre; overflow: auto; border-radius: 3px; border: 1px solid rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220); text-size-adjust: none;">[<span class="" style="color: rgb(204, 147, 147);">'2'</span>, <span class="" style="color: rgb(204, 147, 147);">'3'</span>, <span class="" style="color: rgb(204, 147, 147);">'4'</span>].map(num.bindRight(<span class="" style="color: rgb(239, 239, 175);">null</span>, <span class="" style="color: rgb(140, 208, 211);">10</span>));</code></pre><p style="margin: 0px 0px 1.2em !important;">其中 bindRight 和 bind 方法是相反的，bindRight 相当于从右往左 bind：</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code class="" style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;white-space: pre; overflow: auto; border-radius: 3px; border: 1px solid rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220); text-size-adjust: none;"><span class=""><span class="" style="color: rgb(227, 206, 171);">function</span> <span class="" style="color: rgb(239, 239, 143);">add</span><span class="">(x, y, z)</span></span>{ &nbsp; &nbsp;<br><span class="" style="color: rgb(227, 206, 171);"> &nbsp;return</span> <span class="" style="color: rgb(140, 208, 211);">100</span>*x + <span class="" style="color: rgb(140, 208, 211);">10</span> * y + z;
+}<br><span class="" style="color: rgb(227, 206, 171);">let</span> add1 = add.bind(<span class="" style="color: rgb(239, 239, 175);">null</span>, <span class="" style="color: rgb(140, 208, 211);">1</span>, <span class="" style="color: rgb(140, 208, 211);">2</span>);<br><span class="" style="color: rgb(227, 206, 171);">let</span> add2 = add.bindRight(<span class="" style="color: rgb(239, 239, 175);">null</span>, <span class="" style="color: rgb(140, 208, 211);">1</span>, <span class="" style="color: rgb(140, 208, 211);">2</span>);
+
+add1(<span class="" style="color: rgb(140, 208, 211);">3</span>); <span class="" style="color: rgb(127, 159, 127);">//123<br></span>add2(<span class="" style="color: rgb(140, 208, 211);">3</span>); <span class="" style="color: rgb(127, 159, 127);">//321</span></code></pre><p style="margin: 0px 0px 1.2em !important;">要实现 bindRight，考虑各种情况，稍稍有些复杂，但也并不太麻烦：</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code class="" style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;white-space: pre; overflow: auto; border-radius: 3px; border: 1px solid rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220); text-size-adjust: none;"><span class="" style="color: rgb(204, 147, 147);">Function</span>.prototype.bindRight = <span class=""><span class="" style="color: rgb(227, 206, 171);">function</span><span class="">(thisObj, ...values)</span></span>{<br>
+ &nbsp;<span class="" style="color: rgb(227, 206, 171);">let</span> fn = <span class="" style="color: rgb(227, 206, 171);">this</span>, len = fn.length - values.length; &nbsp;
+ &nbsp;<span class="" style="color: rgb(227, 206, 171);">return</span> <span class=""><span class="" style="color: rgb(227, 206, 171);">function</span><span class="">(...args)</span></span>{ &nbsp; &nbsp;
+ &nbsp; &nbsp;<span class="" style="color: rgb(227, 206, 171);">let</span> rest = [], rargs = values.reverse(); &nbsp; &nbsp;
+ &nbsp; &nbsp;<span class="" style="color: rgb(227, 206, 171);">if</span>(len &gt; <span class="" style="color: rgb(140, 208, 211);">0</span>){
+ &nbsp; &nbsp; &nbsp;rest = args.slice(<span class="" style="color: rgb(140, 208, 211);">0</span>, len);
+ &nbsp; &nbsp;} &nbsp; &nbsp;
+ &nbsp; &nbsp;<span class="" style="color: rgb(227, 206, 171);">return</span> fn.apply(thisObj, rest.concat(rargs));
+ &nbsp;}
+}</code></pre><p style="margin: 0px 0px 1.2em !important;">这样就实现了我们需要的 bindRight，完整的结果如下：</p><p style="margin: 0px 0px 1.2em !important;"><a class="">Function.prototype.bindRight</a></p><p style="margin: 0px 0px 1.2em !important;">bindRight 代码并不复杂，如果 bindRight 的参数个数比函数形参多，那么简单将参数次序 reverse 之后传给原来的函数，否则将函数前面的参数补齐。</p><p style="margin: 0px 0px 1.2em !important;">除了这样实现 bindRight 之外，还可以有利用更基础的高阶函数操作组合的方式：</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code class="" style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;margin: 0px 0.15em; padding: 0px 0.3em; white-space: pre-wrap; border: 1px solid rgb(234, 234, 234); background-color: rgb(248, 248, 248); border-radius: 3px; display: inline;white-space: pre; overflow: auto; border-radius: 3px; border: 1px solid rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220); text-size-adjust: none;"><span class="" style="color: rgb(204, 147, 147);">Function</span>.prototype.reverseArgs = <span class=""><span class="" style="color: rgb(227, 206, 171);">function</span><span class="">()</span></span>{<br><span class="" style="color: rgb(227, 206, 171);"> &nbsp;let</span> fn = <span class="" style="color: rgb(227, 206, 171);">this</span>;<br><span class="" style="color: rgb(227, 206, 171);"> &nbsp;return</span> <span class=""><span class="" style="color: rgb(227, 206, 171);">function</span><span class="">(...args)</span></span>{<br><span class="" style="color: rgb(227, 206, 171);"> &nbsp; &nbsp;return</span> fn.apply(<span class="" style="color: rgb(227, 206, 171);">this</span>, args.reverse());
+ &nbsp;}
+}<br><br><span class="" style="color: rgb(204, 147, 147);">Function</span>.prototype.fixArgsLength = <span class=""><span class="" style="color: rgb(227, 206, 171);">function</span><span class="">(len)</span></span>{<br><span class="" style="color: rgb(227, 206, 171);"> &nbsp;let</span> fn = <span class="" style="color: rgb(227, 206, 171);">this</span>;<br><span class="" style="color: rgb(227, 206, 171);"> &nbsp;return</span> <span class=""><span class="" style="color: rgb(227, 206, 171);">function</span><span class="">(...args)</span></span>{<br> &nbsp; &nbsp;args.length = len || fn.length;<br> &nbsp; &nbsp;<span class="" style="color: rgb(227, 206, 171);">return</span> fn.apply(<span class="" style="color: rgb(227, 206, 171);">this</span>, args);
+ &nbsp;}
+}<br><span class="" style="color: rgb(204, 147, 147);"><br>Function</span>.prototype.bindRight = <span class=""><span class="" style="color: rgb(227, 206, 171);">function</span><span class="">(thisObj, ...values)</span></span>{<br> &nbsp; &nbsp;<span class="" style="color: rgb(227, 206, 171);">return</span> <span class="" style="color: rgb(227, 206, 171);">this</span>.reverseArgs().bind(thisObj, ...values).reverseArgs().fixArgsLength(<span class="" style="color: rgb(140, 208, 211);">1</span>);<br>}</code></pre><p style="margin: 0px 0px 1.2em !important;">上面的这段代码里我们通过 reverseArgs 和 fixArgsLength 以及 bind 来组合出 bindRight。reverseArgs 是将函数参数顺序倒序的高阶函数，fixArgsLength 是将函数参数个数固定的高阶函数，我们可以看到 bindRight 就是先 reverseArgs 再 bind，最后 fixArgsLength（大家可以思考下为什么要 fixArgsLength）。这样就可以了。</p><p style="margin: 0px 0px 1.2em !important;">最后是完整代码：</p><p style="margin: 0px 0px 1.2em !important;"><a class="">bindRight functional</a></p><p style="margin: 0px 0px 1.2em !important;">如有任何问题，欢迎讨论。</p><div title="MDH:PHA+PGJyPjwvcD48cD7kuIDpgZPokZflkI3nmoTlnZHkurrpopjvvIzogq/og73kuIDkupvlkIzl
+rabop4Hov4fvvJo8L3A+PHA+PGJyPjwvcD48cD5gYGBqczwvcD48cD5bJzInLCAnMycsICc0J10u
+bWFwKHBhcnNlSW50KTs8L3A+PHA+YGBgPC9wPjxwPjxicj48L3A+PHA+6K+05Ye65LiK6Z2i5Luj
+56CB55qE5omn6KGM57uT5p6c44CCPC9wPjxwPjxicj48L3A+PHA+Jmx0OyEtLW1vcmUtLSZndDs8
+L3A+PHA+PGJyPjwvcD48cD7lpoLmnpzkuI3ov4fohJHlrZDnmoTor7TmmK8gYFsyLCAzLCA0XWDv
+vIzpgqPkuYjogq/lrprmmK/plJnkuobjgILlrp7pmYXkuIrvvIznnJ/mraPnmoTmiafooYznu5Pm
+npzmmK8gYFsyLCBOYU4sIE5hTl1g44CC5Li65LuA5LmI5Lya6L+Z5qC35ZGi77yf5piv5Zug5Li6
+IG1hcCDnmoTnrpflrZDmmK/mnInkuKTkuKrlj4LmlbDnmoTvvIznrKzkuIDkuKrlj4LmlbDmmK/o
+oqvov63ku6PmlbDnu4TnmoTlhYPntKDvvIznrKzkuozkuKrlj4LmlbDmmK/or6XlhYPntKDnmoTk
+uIvmoIfjgILmiYDku6UgYFsnMicsICczJywgJzQnXS5tYXAocGFyc2VJbnQpYCDlrp7pmYXkuIrn
+m7jlvZPkuo7miafooYzkuoYgYFtwYXJzZUludCgnMicsIDApLCBwYXJzZUludCgnMycsIDEpLCBw
+YXJzZUludCgnNCcsIDIpXWDvvIznu5PmnpzlsLHlj5jmiJDkuoYgYFsyLCBOYU4sIE5hTl1gIOS6
+huOAgjwvcD48cD48YnI+PC9wPjxwPuS7iuWkqeaIkeS7rOWcqOi/memHjOS4u+imgeS4jeaYr+iu
+qOiuuuS4uuS7gOS5iCBgcGFyc2VJbnQoJzInLCAwKWAg5pivIDLvvIzogIwgYHBhcnNlSW50KCcz
+JywgMSlgIOaYryBOYU7vvIzlrp7pmYXkuIrmiJHku6zmnJ/mnJvnmoTnu5PmnpzlupTor6XmmK8g
+YHBhcnNlSW50KCcyJywgMTApYCDlkowgYHBhcnNlSW50KCczJywgMTApYO+8jOaKiuWtl+espuS4
+siAnMifjgIEnMycg6L2s5oiQ5Y2B6L+b5Yi2IG51bWJlcuOAgjwvcD48cD48YnI+PC9wPjxwPuaJ
+gOS7pe+8jOato+ehrueahOWGmeazleW6lOivpeaYr++8mjwvcD48cD48YnI+PC9wPjxwPmBgYGpz
+PC9wPjxwPlsnMicsICczJywgJzQnXS5tYXAobnVtID0mZ3Q7IHBhcnNlSW50KG51bSwgMTApKTs8
+L3A+PHA+YGBgPC9wPjxwPjxicj48L3A+PHA+5LiK6Z2i6L+Z5Liq5YaZ5rOV5a+55LqO6L+Z5Liq
+6Zeu6aKY5p2l6K+05piv566A5Y2V55qE77yM5ZKM5Ye95pWw5byP57yW56iL5YWz57O75LiN5aSn
+44CC5L2G5piv77yM6L+Z5Liq6Zeu6aKY5aaC5p6c55So6L+H56iL5oq96LGh55qE5oCd6Lev6YCa
+55So5YyW5oCd6ICD77yM5bqU6K+l5piv6L+Z5qC355qE77yaPC9wPjxwPjxicj48L3A+PHA+YGBg
+anM8L3A+PHA+WycyJywgJzMnLCAnNCddLm1hcChudW0uYmluZFJpZ2h0KG51bGwsIDEwKSk7PC9w
+PjxwPmBgYDwvcD48cD48YnI+PC9wPjxwPuWFtuS4rSBiaW5kUmlnaHQg5ZKMIGJpbmQg5pa55rOV
+5piv55u45Y+N55qE77yMYmluZFJpZ2h0IOebuOW9k+S6juS7juWPs+W+gOW3piBiaW5k77yaPC9w
+PjxwPjxicj48L3A+PHA+YGBganM8L3A+PHA+ZnVuY3Rpb24gYWRkKHgsIHksIHopezwvcD48cD4m
+bmJzcDsgJm5ic3A7IHJldHVybiAxMDAqeCArIDEwICogeSArIHo7PC9wPjxwPn08L3A+PHA+PGJy
+PjwvcD48cD5sZXQgYWRkMSA9IGFkZC5iaW5kKG51bGwsIDEsIDIpOzwvcD48cD5sZXQgYWRkMiA9
+IGFkZC5iaW5kUmlnaHQobnVsbCwgMSwgMik7PC9wPjxwPjxicj48L3A+PHA+YWRkMSgzKTsgLy8x
+MjM8L3A+PHA+YWRkMigzKTsgLy8zMjE8L3A+PHA+YGBgPC9wPjxwPjxicj48L3A+PHA+6KaB5a6e
+546wIGJpbmRSaWdodO+8jOiAg+iZkeWQhOenjeaDheWGte+8jOeojeeojeacieS6m+Wkjeadgu+8
+jOS9huS5n+W5tuS4jeWkqum6u+eDpu+8mjwvcD48cD48YnI+PC9wPjxwPmBgYGpzPC9wPjxwPkZ1
+bmN0aW9uLnByb3RvdHlwZS5iaW5kUmlnaHQgPSBmdW5jdGlvbih0aGlzT2JqLCAuLi52YWx1ZXMp
+ezwvcD48cD4mbmJzcDsgbGV0IGZuID0gdGhpcywgbGVuID0gZm4ubGVuZ3RoIC0gdmFsdWVzLmxl
+bmd0aDs8L3A+PHA+Jm5ic3A7IHJldHVybiBmdW5jdGlvbiguLi5hcmdzKXs8L3A+PHA+Jm5ic3A7
+ICZuYnNwOyBsZXQgcmVzdCA9IFtdLCByYXJncyA9IHZhbHVlcy5yZXZlcnNlKCk7PC9wPjxwPiZu
+YnNwOyAmbmJzcDsmbmJzcDs8L3A+PHA+Jm5ic3A7ICZuYnNwOyBpZihsZW4gJmd0OyAwKXs8L3A+
+PHA+Jm5ic3A7ICZuYnNwOyAmbmJzcDsgcmVzdCA9IGFyZ3Muc2xpY2UoMCwgbGVuKTs8L3A+PHA+
+Jm5ic3A7ICZuYnNwOyB9PC9wPjxwPjxicj48L3A+PHA+Jm5ic3A7ICZuYnNwOyByZXR1cm4gZm4u
+YXBwbHkodGhpc09iaiwgcmVzdC5jb25jYXQocmFyZ3MpKTs8L3A+PHA+Jm5ic3A7IH08L3A+PHA+
+fTwvcD48cD5gYGA8L3A+PHA+PGJyPjwvcD48cD7ov5nmoLflsLHlrp7njrDkuobmiJHku6zpnIDo
+poHnmoQgYmluZFJpZ2h077yM5a6M5pW055qE57uT5p6c5aaC5LiL77yaPC9wPjxwPjxicj48L3A+
+PHA+Jmx0O2EgY2xhc3M9ImpzYmluLWVtYmVkIiBocmVmPSIvL2NvZGUuaDVqdW4uY29tL3FpZy83
+L2VtYmVkP2pzLGNvbnNvbGUiJmd0O0Z1bmN0aW9uLnByb3RvdHlwZS5iaW5kUmlnaHQmbHQ7L2Em
+Z3Q7Jmx0O3NjcmlwdCBzcmM9Imh0dHBzOi8vLy9jb2RlLmg1anVuLmNvbS9qcy9lbWJlZC5taW4u
+anM/My40MC4yIiZndDsmbHQ7L3NjcmlwdCZndDs8L3A+PHA+PGJyPjwvcD48cD5iaW5kUmlnaHQg
+5Luj56CB5bm25LiN5aSN5p2C77yM5aaC5p6cIGJpbmRSaWdodCDnmoTlj4LmlbDkuKrmlbDmr5Tl
+h73mlbDlvaLlj4LlpJrvvIzpgqPkuYjnroDljZXlsIblj4LmlbDmrKHluo8gcmV2ZXJzZSDkuYvl
+kI7kvKDnu5nljp/mnaXnmoTlh73mlbDvvIzlkKbliJnlsIblh73mlbDliY3pnaLnmoTlj4LmlbDo
+oaXpvZDjgII8L3A+PHA+PGJyPjwvcD48cD7pmaTkuobov5nmoLflrp7njrAgYmluZFJpZ2h0IOS5
+i+Wklu+8jOi/mOWPr+S7peacieWIqeeUqOabtOWfuuehgOeahOmrmOmYtuWHveaVsOaTjeS9nOe7
+hOWQiOeahOaWueW8j++8mjwvcD48cD48YnI+PC9wPjxwPmBgYGpzPC9wPjxwPkZ1bmN0aW9uLnBy
+b3RvdHlwZS5yZXZlcnNlQXJncyA9IGZ1bmN0aW9uKCl7PC9wPjxwPiZuYnNwOyBsZXQgZm4gPSB0
+aGlzOzwvcD48cD4mbmJzcDsgcmV0dXJuIGZ1bmN0aW9uKC4uLmFyZ3MpezwvcD48cD4mbmJzcDsg
+Jm5ic3A7IHJldHVybiBmbi5hcHBseSh0aGlzLCBhcmdzLnJldmVyc2UoKSk7PC9wPjxwPiZuYnNw
+OyB9PC9wPjxwPn08L3A+PHA+PGJyPjwvcD48cD5GdW5jdGlvbi5wcm90b3R5cGUuZml4QXJnc0xl
+bmd0aCA9IGZ1bmN0aW9uKGxlbil7PC9wPjxwPiZuYnNwOyBsZXQgZm4gPSB0aGlzOzwvcD48cD4m
+bmJzcDsgcmV0dXJuIGZ1bmN0aW9uKC4uLmFyZ3MpezwvcD48cD4mbmJzcDsgJm5ic3A7IGFyZ3Mu
+bGVuZ3RoID0gbGVuIHx8IGZuLmxlbmd0aDs8L3A+PHA+Jm5ic3A7ICZuYnNwOyByZXR1cm4gZm4u
+YXBwbHkodGhpcywgYXJncyk7PC9wPjxwPiZuYnNwOyB9PC9wPjxwPn08L3A+PHA+PGJyPjwvcD48
+cD5GdW5jdGlvbi5wcm90b3R5cGUuYmluZFJpZ2h0ID0gZnVuY3Rpb24odGhpc09iaiwgLi4udmFs
+dWVzKXs8L3A+PHA+Jm5ic3A7IHJldHVybiB0aGlzLnJldmVyc2VBcmdzKCkuYmluZCh0aGlzT2Jq
+LCAuLi52YWx1ZXMpLnJldmVyc2VBcmdzKCkuZml4QXJnc0xlbmd0aCgxKTs8L3A+PHA+fTwvcD48
+cD5gYGA8L3A+PHA+PGJyPjwvcD48cD7kuIrpnaLnmoTov5nmrrXku6PnoIHph4zmiJHku6zpgJro
+v4cgcmV2ZXJzZUFyZ3Mg5ZKMIGZpeEFyZ3NMZW5ndGgg5Lul5Y+KIGJpbmQg5p2l57uE5ZCI5Ye6
+IGJpbmRSaWdodOOAgnJldmVyc2VBcmdzIOaYr+WwhuWHveaVsOWPguaVsOmhuuW6j+WAkuW6j+ea
+hOmrmOmYtuWHveaVsO+8jGZpeEFyZ3NMZW5ndGgg5piv5bCG5Ye95pWw5Y+C5pWw5Liq5pWw5Zu6
+5a6a55qE6auY6Zi25Ye95pWw77yM5oiR5Lus5Y+v5Lul55yL5YiwIGJpbmRSaWdodCDlsLHmmK/l
+hYggcmV2ZXJzZUFyZ3Mg5YaNIGJpbmTvvIzmnIDlkI4gZml4QXJnc0xlbmd0aO+8iOWkp+WutuWP
+r+S7peaAneiAg+S4i+S4uuS7gOS5iOimgSBmaXhBcmdzTGVuZ3Ro77yJ44CC6L+Z5qC35bCx5Y+v
+5Lul5LqG44CCPC9wPjxwPjxicj48L3A+PHA+5pyA5ZCO5piv5a6M5pW05Luj56CB77yaPC9wPjxw
+Pjxicj48L3A+PHA+Jmx0O2EgY2xhc3M9ImpzYmluLWVtYmVkIiBocmVmPSIvL2NvZGUuaDVqdW4u
+Y29tL2Zhc2EvZW1iZWQ/anMsY29uc29sZSImZ3Q7YmluZFJpZ2h0IGZ1bmN0aW9uYWwmbHQ7L2Em
+Z3Q7Jmx0O3NjcmlwdCBzcmM9Imh0dHBzOi8vLy9jb2RlLmg1anVuLmNvbS9qcy9lbWJlZC5taW4u
+anM/My40MC4yIiZndDsmbHQ7L3NjcmlwdCZndDs8L3A+PHA+PGJyPjwvcD48cD7lpoLmnInku7vk
+vZXpl67popjvvIzmrKLov47orqjorrrjgII8L3A+PHA+PGJyPjwvcD4=" style="height:0;width:0;max-height:0;max-width:0;overflow:hidden;font-size:0em;padding:0;margin:0;"></div></div>
+{% endraw  %}
+

@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>301在路上</title>
+  <description>着重宣传企业和个人信息安全意识,帮助大家更好地保护自己.</description>
+  <link href="/a301zls.xml"/>
+  <link type="application/atom+xml" rel="self" href="/a301zls.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>a301zls</id>
+
+  {% for post in site.a301zls %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

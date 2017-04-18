@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>肉饼铺子</title>
+  <description>robbin是前JavaEye网站创始人,现在是丁香园CTO.如果你是技术人员,正在创业或者希望加入创业,关注互联网产品、研发、运营、创业管理,请关注我.</description>
+  <link href="/robbinthoughts.xml"/>
+  <link type="application/atom+xml" rel="self" href="/robbinthoughts.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>robbinthoughts</id>
+
+  {% for post in site.robbinthoughts %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

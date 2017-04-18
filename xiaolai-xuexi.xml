@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>学习学习再学习</title>
+  <description>通往财富自由之路</description>
+  <link href="/xiaolai-xuexi.xml"/>
+  <link type="application/atom+xml" rel="self" href="/xiaolai-xuexi.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>xiaolai-xuexi</id>
+
+  {% for post in site.xiaolai-xuexi %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

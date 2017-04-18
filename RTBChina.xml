@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>RTBChina</title>
+  <description>RTBChina 是关于中国网络广告新生态系统的资讯精选.介绍DSP; SSP; Ad Exchange; DMP; 和数据交易平台在中国发展状况. www.RTBChina.com编纂维护最新的《中国RTB广告技术产业地图》和行业研究报告</description>
+  <link href="/RTBChina.xml"/>
+  <link type="application/atom+xml" rel="self" href="/RTBChina.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>RTBChina</id>
+
+  {% for post in site.RTBChina %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

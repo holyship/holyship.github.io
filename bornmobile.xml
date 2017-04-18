@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>移动开发前线</title>
+  <description>专注于分享移动开发前沿和一线技术.</description>
+  <link href="/bornmobile.xml"/>
+  <link type="application/atom+xml" rel="self" href="/bornmobile.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>bornmobile</id>
+
+  {% for post in site.bornmobile %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

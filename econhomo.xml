@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>徐瑾经济人</title>
+  <description>阅读与分享:经济与人文的路口</description>
+  <link href="/econhomo.xml"/>
+  <link type="application/atom+xml" rel="self" href="/econhomo.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>econhomo</id>
+
+  {% for post in site.econhomo %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

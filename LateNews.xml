@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>LateNews by 小晚</title>
+  <description>取名「LateNews」是因为朋友们都叫我小晚.专业财经记者.支持创业、投资和自由竞争,反对垄断与黑幕.言语犀利,心怀善意.</description>
+  <link href="/LateNews.xml"/>
+  <link type="application/atom+xml" rel="self" href="/LateNews.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>LateNews</id>
+
+  {% for post in site.LateNews %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

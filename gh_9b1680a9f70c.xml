@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>Lightwing</title>
+  <description>来自英国的三国迷中国通 讲述不一样的视角看世界</description>
+  <link href="/gh_9b1680a9f70c.xml"/>
+  <link type="application/atom+xml" rel="self" href="/gh_9b1680a9f70c.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>gh_9b1680a9f70c</id>
+
+  {% for post in site.gh_9b1680a9f70c %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

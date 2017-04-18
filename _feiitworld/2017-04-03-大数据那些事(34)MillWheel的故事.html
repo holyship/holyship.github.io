@@ -1,0 +1,11 @@
+---
+title: '大数据那些事(34):MillWheel的故事'
+author: 飞总
+date: '2017-04-03 00:00:00 +0000'
+
+---
+
+{% raw  %}
+<p><img src="/feiitworld/images/5df971c1390e7d6ff1397dbfb5c2e2261d3951e9.jpeg" style="width: 770px !important; height: 576.757px !important; visibility: visible !important;"></p><p><br></p><p>MillWheel我想估计又是一个很多人没有听说过的系统。这个系统是Google内部的流计算系统，目前被Google广泛的运用在各个方面。做这个系统的组和早年做出来Flume Java以及Flume C++的是一个团队，在Jeff Dean的博士导师的指导下。</p><p><br></p><p>这个项目据说做了很久，遇到了很大的挑战。作为一个以系统成名的人，Jeff Dean的导师却是一个不折不扣的Programming language的研究者。这从早年的MapReduce的论文里面既是一个编程模型也是一个系统可见一斑。所以这次MillWheel的特点就是既是一个编程模型也是一个系统。但是因为是做Programming Language的人出身，整篇论文以编程模型为主。</p><p><br></p><p>这篇论文发表在VLDB2013上还是让我比较吃惊的。我想有一个可能是作为编程模型出身的人，PLDI对这种论文的兴趣不是那么大，于是只能赚一圈最后在DB的圈子里发出来了。</p><p><br></p><p>至于实际的影响么，在Google内部这个系统和Flume一起已经越来越占据重要的市场了，而MapReduce基本上已经没有人直接用了。Google开源了Beam以后这种作为Beam底层的executor的东西，就更加显得离大众远了。</p><p><br></p><p>关于MillWheel的整个编程模型来说，无非就是用户可以指定computation，而数据则通过stream来提供。computation和stream之间像是pub/sub的关系。每个record可以有一个key，而全局状态则按key保存在不用担心会坏掉的storage比如bigtable或者spanner里面。论文里对流的语义定义是每个record 被deliver exactly once。</p><p><br></p><p>作为PL出身的系统，有着非常浓厚的编程味道。应该说这个系统做得很像Flume或者C#的LINQ，而不是类SQL的语言。这一点从各大系统的发展来看好像是一个趋势了。</p><p><br></p><p>从论文本身看我并未觉得这个模型有特别惊艳的感觉但是Google的engineering的水平是一直都很高的。所以从Flume裸写query plan到MillWheel用procedure的语言，这对使用者来说都提出了比较高的要求。我想可能是更适合Google的员工的一个典型的Google系统。</p><p><br></p>
+{% endraw  %}
+

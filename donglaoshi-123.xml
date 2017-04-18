@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>董老师在硅谷</title>
+  <description>硅谷工程师,关注创业趋势,大数据,在线教育,社交自媒体.分享技术,体验职场,书写成长,欢迎交流,一起进步.</description>
+  <link href="/donglaoshi-123.xml"/>
+  <link type="application/atom+xml" rel="self" href="/donglaoshi-123.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>donglaoshi-123</id>
+
+  {% for post in site.donglaoshi-123 %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

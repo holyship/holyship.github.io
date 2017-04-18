@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>聊聊架构</title>
+  <description>在这里煮酒聊架构.</description>
+  <link href="/archtime.xml"/>
+  <link type="application/atom+xml" rel="self" href="/archtime.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>archtime</id>
+
+  {% for post in site.archtime %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

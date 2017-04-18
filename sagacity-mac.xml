@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>MacTalk</title>
+  <description>MacTalk 开通于2012年末,内容起于 Mac 而不止 Mac,内容覆盖了技术、创业、产品和人文思考.文风有趣,又有一点力量.相关图书《MacTalk·人生元编程》《MacTalk·跨越边界》</description>
+  <link href="/sagacity-mac.xml"/>
+  <link type="application/atom+xml" rel="self" href="/sagacity-mac.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>sagacity-mac</id>
+
+  {% for post in site.sagacity-mac %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

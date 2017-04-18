@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>半轻人</title>
+  <description>王咏刚,笔名半轻人.技术宅,逻辑控.伪极客,真笨伯.用 emacs 写小说,用平水韵下酒.在太阳系最酷最大的网络公司上班,梦见二进制的下午茶.</description>
+  <link href="/ban-qing-ren.xml"/>
+  <link type="application/atom+xml" rel="self" href="/ban-qing-ren.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>ban-qing-ren</id>
+
+  {% for post in site.ban-qing-ren %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

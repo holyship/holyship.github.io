@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>七牛云</title>
+  <description>七牛云,开发者的互联网创新加速引擎.</description>
+  <link href="/qiniutek.xml"/>
+  <link type="application/atom+xml" rel="self" href="/qiniutek.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>qiniutek</id>
+
+  {% for post in site.qiniutek %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

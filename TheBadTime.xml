@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>坏时代</title>
+  <description>这是最好的时代,也是最坏的时代.;;;;「小道消息」 2.0 版本.</description>
+  <link href="/TheBadTime.xml"/>
+  <link type="application/atom+xml" rel="self" href="/TheBadTime.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>TheBadTime</id>
+
+  {% for post in site.TheBadTime %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

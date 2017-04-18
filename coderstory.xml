@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>神秘的程序员们</title>
+  <description>作为一个程序员星人,在地球上工作生活时,你是否会感到孤独呢? 这里有来自程序员母星的亲切问候和地球漫游指南.国内首部以程序员文化、技术主题、项目管理及互联网创业的为主题漫画,诞生于09年.主创:西乔、...</description>
+  <link href="/coderstory.xml"/>
+  <link type="application/atom+xml" rel="self" href="/coderstory.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>coderstory</id>
+
+  {% for post in site.coderstory %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

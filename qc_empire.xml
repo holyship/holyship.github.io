@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>覃超帝国兴亡史</title>
+  <description>覃超帝国兴亡史,在希望的田野上: 如何去准备面试和去硅谷列强 (Facebook; Google; LinkedIn; Airbnb; etc) 工作;互联网创业;如何申请去北美计算机牛校(比如CMU; Stanford; etc)</description>
+  <link href="/qc_empire.xml"/>
+  <link type="application/atom+xml" rel="self" href="/qc_empire.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>qc_empire</id>
+
+  {% for post in site.qc_empire %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>二爷鉴书</title>
+  <description>第一时间向大家推荐好书和介绍,同时坚决揭露烂书,以IT、互联网行业为主.个人品味,仅供参考.</description>
+  <link href="/findbook.xml"/>
+  <link type="application/atom+xml" rel="self" href="/findbook.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>findbook</id>
+
+  {% for post in site.findbook %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

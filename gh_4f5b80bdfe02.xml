@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>微软苏州</title>
+  <description>微软苏州官方订阅号</description>
+  <link href="/gh_4f5b80bdfe02.xml"/>
+  <link type="application/atom+xml" rel="self" href="/gh_4f5b80bdfe02.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>gh_4f5b80bdfe02</id>
+
+  {% for post in site.gh_4f5b80bdfe02 %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

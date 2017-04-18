@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>科学性</title>
+  <description>科学性是丁香医生旗下的两性科普平台.有趣、有用、有料,和你一起科学地探索 G 点.我们将改变潮水的高度.</description>
+  <link href="/sex-ology.xml"/>
+  <link type="application/atom+xml" rel="self" href="/sex-ology.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>sex-ology</id>
+
+  {% for post in site.sex-ology %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

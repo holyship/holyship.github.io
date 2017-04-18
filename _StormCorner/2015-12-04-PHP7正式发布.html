@@ -1,0 +1,11 @@
+---
+title: PHP7正式发布
+author: 风雪之隅
+date: '2015-12-04 00:00:00 +0000'
+
+---
+
+{% raw  %}
+<p>今天临晨的时候, 在我们已经到了12月4日, 但是美国时间还是10月3日的时候, PHP7终于正式发布了.</p><p><br></p><p>官方的Release Note可以参看php.net:</p><p>"</p><p style="">The PHP development team announces the immediate availability of PHP 7.0.0. This release marks the start of the new major PHP 7 series.</p><p style="">PHP 7.0.0 comes with a new version of the Zend Engine, numerous improvements and new features such as</p><ul style="" class="list-paddingleft-2"><li><p>Improved performance: PHP 7 is up to twice as fast as PHP 5.6</p></li><li><p>Significantly reduced memory usage</p></li><li><p>Abstract Syntax Tree</p></li><li><p>Consistent 64-bit support</p></li><li><p>Improved Exception hierarchy</p></li><li><p>Many fatal errors converted to Exceptions</p></li><li><p>Secure random number generator</p></li><li><p>Removed old and unsupported SAPIs and extensions</p></li><li><p>The null coalescing operator (??)</p></li><li><p>Return and Scalar Type Declarations</p></li><li><p>Anonymous Classes</p></li><li><p>Zero cost asserts</p></li></ul><p>"</p><p><br></p><p>   下载地址(包括Windows): http://www.php.net/downloads.php</p><p><br></p><p>   为了充分显示出PHP7的最佳性能, 这里有几点Tips给大家:</p><p><br></p><ol class="list-paddingleft-2" style="list-style-type: decimal;"><li><p>记得启用Zend Opcache, 因为PHP7即使不启用Opcache速度也比PHP-5.6启用了Opcache快, 所以之前测试时期就发生了有人一直没有启用Opcache的事情. 启用Opcache非常简单, 在php.ini配置文件中加入:</p><p>"zend_extension=opcache.so</p></li></ol><p>       opcache.enable=1</p><p>       opcache.enable_cli=1"</p><p><br></p><p>2.   使用新一点的编译器, 推荐GCC 4.8以上, 因为只有GCC 4.8以上PHP才会开启Global Register for opline and execute_data支持, 这个会带来5%左右的性能提升(Wordpres的QPS角度衡量)</p><p><br></p><p>3.   在服务端开启HugePages, 然后开启Opcache的huge_code_pages.</p><p>     以我的CentOS 6.5为例, 通过:</p><p>    "sudo sysctl vm.nr_hugepages=512" 分配512个预留的大页内存</p><p>     然后在php.ini中:</p><p>     "opcache.huge_code_pages=1"</p><p>     这样一来, PHP会把自身的text段, 以及内存分配中的huge都采用大内存页来保存, 减少TLB miss, 从而提高性能.</p><p><br></p><p>4.  开启Opcache File Cache(实验性),  通过开启这个, 我们可以让Opcache把opcode缓存缓存到外部文件中, 对于一些脚本, 会有很明显的性能提升.</p><p>     在php.ini中:</p><p>     "opcache.file_cache=/tmp"</p><p><br></p><p> 好了, 欢迎大家测试, 有问题欢迎反馈, 你可以提交bug到bugs.php.net, 或者你可以在微博上@我, 也可以在github上提交issue, 等等. Enjoy!</p><p><br></p><p>thanks</p>
+{% endraw  %}
+

@@ -1,5 +1,4 @@
 node_modules/
 .sass-cache/
-_*/
-*.xml
 Gemfile.lock
+_site/

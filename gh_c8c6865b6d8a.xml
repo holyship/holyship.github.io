@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>OfferCome猎头</title>
+  <description>专注于互联网、移动互联网的猎头资讯平台.</description>
+  <link href="/gh_c8c6865b6d8a.xml"/>
+  <link type="application/atom+xml" rel="self" href="/gh_c8c6865b6d8a.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>gh_c8c6865b6d8a</id>
+
+  {% for post in site.gh_c8c6865b6d8a %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

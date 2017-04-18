@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>鱼肚白动画</title>
+  <description>了解全球动画咨询,分享更多动画知识、经验、技巧,做一流动画师!我们是北京鱼肚白文化传媒有限公司. 欢迎关注我们的原创动画《女生宿舍日常》</description>
+  <link href="/wangbinnv09.xml"/>
+  <link type="application/atom+xml" rel="self" href="/wangbinnv09.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>wangbinnv09</id>
+
+  {% for post in site.wangbinnv09 %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

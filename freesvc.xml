@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>峰瑞资本</title>
+  <description>Free Service; Free Style; Free Startup; Free Spirit.</description>
+  <link href="/freesvc.xml"/>
+  <link type="application/atom+xml" rel="self" href="/freesvc.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>freesvc</id>
+
+  {% for post in site.freesvc %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

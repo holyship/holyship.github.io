@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>编辑之家</title>
+  <description>无论媒体发展到什么程度,它都离不开我们编辑人的担当.编辑之家以编辑出版学专业为根基,倡导人人为编和编为人人的基本理念,集信息发布、资源推介,课程教学、专业研究、班级活动以及各类深度策划选题和话题探讨...</description>
+  <link href="/bnuzbjzj.xml"/>
+  <link type="application/atom+xml" rel="self" href="/bnuzbjzj.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>bnuzbjzj</id>
+
+  {% for post in site.bnuzbjzj %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }}]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>
