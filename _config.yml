@@ -4,11 +4,6 @@ exclude:
   - Gemfile.lock
 
 collections:
-  # AlgorithmDog
-  # AlgorithmDog讲述机器学习和系统研发的轶事，希望把这些事讲得生动有趣。每两周更新哦。欢迎关注。
-  AlgorithmDog:
-    cache_image: true
-    output: true
   # 艾格吃饱了
   # 关于食物，我不是比你懂得更多一些，只是比你花了更多的冤枉钱。
   aigechibaole:
