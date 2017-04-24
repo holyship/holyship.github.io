@@ -230,8 +230,8 @@ layout: null
   <link type="application/atom+xml" rel="self" href="/${id}.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
   <id>${id}</id>
-
-  {% for post in site.${id} reversed limit:10 %}
+  {% assign posts = site.${id} | reverse | limit:10 %}
+  {% for post in posts %}
   <entry>
     <id>{{ post.id }}</id>
     <link type="text/html" rel="alternate" href="{% if post.wechat_source == blank %}{{ post.url }}{% else %}{{ post.wechat_source }}{% endif %}"/>
