@@ -14,6 +14,8 @@ const https = require('https');
 const crypto = require('crypto');
 const glob = require("glob");
 
+const DEFAULT_SLEEP_TIME = 2000;
+
 const SEARCH_HOME = 'http://wx.sogou.com';
 const SEARCH_BOX_INPUT = 'input[name=query]';
 const SEARCH_BUTTON = 'input[type="button"][value="搜公众号"]';
@@ -119,7 +121,7 @@ ${content}
 `).then((data) => writeFile(fullPath, data));
 }
 
-function sleep(time) {
+function sleep(time = DEFAULT_SLEEP_TIME) {
   return new Promise(resolve => {
     setTimeout(resolve, time);
   })
@@ -166,67 +168,53 @@ function fileExist(patten) {
   });
 }
 
-function processArticles(id, processingIndex, cacheImage) {
+function processArticles(id, processingIndex, list, cacheImage) {
   if (processingIndex < 0) return Promise.resolve();
   console.log(`start on #${processingIndex}`);
-  const article = {};
-  return waitUntilNoVerify().then(() =>
-    nightmare
-      .evaluate(function(titleSelector, infoSelector, idx) {
+  const article = Object.assign({}, list[processingIndex]);
+  const fileName = sanitize(`${getDateOnly(article.info)}-${article.title}.html`);
+  const fileFullPath = `./_${id}/${fileName}`;
+  article.fullPath = fileFullPath;
+  if (fs.existsSync(fileFullPath)) {
+    // skip if exist
+    console.log(`skiping: ${fileFullPath}`);
+    return processArticles(id, processingIndex - 1, list, cacheImage);
+  }
+  // process the detail content
+  console.log(`processing: ${fileFullPath}`);
+  return nightmare
+    .goto(article.url)
+    .then(() => waitUntilNoVerify())
+    .then(() =>
+      nightmare.wait('.rich_media_content')
+      .evaluate(function() {
+        // remove all lazy loading image
+        const images = [];
+        document.querySelectorAll('img[data-src]').forEach(e => {
+          const newImg = document.createElement('img');
+          images.push(e.dataset.src);
+          newImg.src = e.dataset.src;
+          newImg.style = e.style.cssText;
+          e.parentElement.insertBefore(newImg, e);
+          e.remove();
+        });
+        let source = msg_source_url && ` | <a href="${msg_source_url}"/>阅读原文</a>`;
         return {
-          title: document.querySelectorAll(titleSelector)[idx].innerText.replace(/\n|\r|\t/g, '').trim(),
-          info: document.querySelectorAll(infoSelector)[idx].innerText.replace(/\n|\r|\t/g, '').trim(),
+          date: new Date(document.querySelector('#post-date').innerText),
+          author: document.querySelector('#post-date ~ em,#post-user').innerText,
+          content: `${document.querySelector('.rich_media_content').innerHTML.trim()}<hr/><a href="${location.href}">微信地址</a>${source}`,
+          wechat_source: msg_source_url,
+          images,
         };
-      }, ARTICLE_TITLE, ARTICLE_INFO, processingIndex)
+      })
     )
-    .then((basicInfo) => {
-      Object.assign(article, basicInfo);
-      const fileName = sanitize(`${getDateOnly(article.info)}-${article.title}.html`);
-      const fileFullPath = `./_${id}/${fileName}`;
-      article.fullPath = fileFullPath;
-      if (fs.existsSync(fileFullPath)) {
-        // skip if exist
-        console.log(`skiping: ${fileFullPath}`);
-        return processArticles(id, processingIndex - 1, cacheImage);
-      }
-      // process the detail content
-      console.log(`processing: ${fileFullPath}`);
-      return nightmare
-        .evaluate(function(titleSelector, idx) {
-          document.querySelectorAll(titleSelector)[idx].click();
-        }, ARTICLE_TITLE, processingIndex)
-        .then(() => waitUntilNoVerify())
-        .then(() =>
-          nightmare.wait('.rich_media_content')
-          .evaluate(function() {
-            // remove all lazy loading image
-            const images = [];
-            document.querySelectorAll('img[data-src]').forEach(e => {
-              const newImg = document.createElement('img');
-              images.push(e.dataset.src);
-              newImg.src = e.dataset.src;
-              newImg.style = e.style.cssText;
-              e.parentElement.insertBefore(newImg, e);
-              e.remove();
-            });
-            let source = msg_source_url && ` | <a href="${msg_source_url}"/>阅读原文</a>`;
-            return {
-              date: new Date(document.querySelector('#post-date').innerText),
-              author: document.querySelector('#post-date ~ em,#post-user').innerText,
-              content: `${document.querySelector('.rich_media_content').innerHTML.trim()}<hr/><a href="${location.href}">微信地址</a>${source}`,
-              wechat_source: msg_source_url,
-              images,
-            };
-          })
-        )
-        .then((data) => {
-          Object.assign(article, data);
-          if (!cacheImage) article.images = [];
-          return saveArticle(id, article);
-        })
-        .then(() => nightmare.back())
-        .then(() => processArticles(id, processingIndex - 1, cacheImage));
-    });
+    .then((data) => {
+      Object.assign(article, data);
+      if (!cacheImage) article.images = [];
+      return saveArticle(id, article);
+    })
+    .then(() => sleep())
+    .then(() => processArticles(id, processingIndex - 1, list, cacheImage));
 }
 
 function createFeed(id, title, description) {
@@ -282,9 +270,10 @@ function timeMatch(str) {
 function crawl(feeds) {
   return feeds
     .reduce((promise, {id, cache_image}, currentIndex) =>
-      promise.then(() => {
+      promise
+      .then(() => sleep())
+      .then(() => {
         console.log(`=================== ${currentIndex} - ${id} ===================`)
-        let articleCount;
         let listUrl;
 
         const folder = `./_${id}`;
@@ -342,19 +331,22 @@ function crawl(feeds) {
               .then(() =>
                 nightmare
                   .wait(ARTICLE_TITLE)
-                  .evaluate(function(selector) {
-                    return {
-                      title: document.querySelector('.profile_nickname').innerText.trim(),
-                      description: document.querySelector('.profile_desc_value').innerText.trim(),
-                      count: document.querySelectorAll(selector).length,
-                    };
-                  }, ARTICLE_TITLE)
-                  .then(({count, title, description}) => {
-                    articleCount = count;
-                  })
+                  .evaluate(function(titleSelector, infoSelector) {
+                    const list = [];
+                    document.querySelectorAll(titleSelector).forEach(e => {
+                      list.push({
+                        url: location.origin + e.getAttribute('hrefs'),
+                        title: e.innerText.replace(/\n|\r|\t/g, '').trim(),
+                      });
+                    });
+                    document.querySelectorAll(infoSelector).forEach((e, idx) => {
+                      list[idx].info = e.innerText.replace(/\n|\r|\t/g, '').trim();
+                    });
+                    return list;
+                  }, ARTICLE_TITLE, ARTICLE_INFO)
               )
-              .then(() => // process articles
-                processArticles(id, articleCount - 1, cache_image)
+              .then(list => // process articles
+                processArticles(id, list.length - 1, list, cache_image)
               )
           })
         })
