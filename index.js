@@ -203,7 +203,7 @@ function processArticles(id, processingIndex, list, cacheImage) {
           date: new Date(document.querySelector('#post-date').innerText),
           author: document.querySelector('#post-date ~ em,#post-user').innerText,
           content: `${document.querySelector('.rich_media_content').innerHTML.trim()}<hr/><a href="${location.href}">微信地址</a>${source}`,
-          wechat_source: msg_source_url,
+          wechat_source: location.href,
           images,
         };
       })
@@ -240,7 +240,7 @@ layout: null
     <author>
       <name>{{ post.author | xml_escape }}</name>
     </author>
-    <content type="html"><![CDATA[{{ post.content }}]]></content>
+    <content type="html"><![CDATA[{{ post.content }} | <a href="{{ post.url }}">缓存地址</a>]]></content>
   </entry>
   {% endfor %}
 
