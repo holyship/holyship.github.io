@@ -283,27 +283,28 @@ function crawl(feeds) {
         return nightmare
           .goto(`http://wx.sogou.com/weixin?type=1&query=${id}&ie=utf8&s_from=input&_sug_=y&_sug_type_=`)
           .then(() => waitUntilNoVerify())
-          .wait(SEARCH_RESULT_URL)
-          .evaluate(function(resultUrl, recentArticle, recentArticleTime, recentSignal, titleSelector, desSelector) {
-            const recentSignalText = document.querySelector(recentSignal).innerText.trim();
-            if (recentSignalText !== '最近文章：') {
-              return { noUpdate: true };
-            }
-            const article = document.querySelector(recentArticle);
-            const time = document.querySelector(recentArticleTime);
-            let result = {};
-            if (article && time) {
-              result = {
-                title: document.querySelector(titleSelector).innerText.trim(),
-                description: document.querySelector(desSelector).innerText.trim(),
-                recentArticle: article.innerText.trim(),
-                time: time.innerText.trim(),
-              }
-            }
-            result.url = document.querySelector(resultUrl).href
-            return result;
-          }, SEARCH_RESULT_URL, RECENT_ARTICLE, RECENT_ARTICLE_TIME, RECENT_SIGNAL, FEED_TITLE, FEED_DESCRIPTION)
-          .then(({url, recentArticle, time, noUpdate, title, description}) => {// go to result url
+          .then(() =>
+            nightmare.wait(SEARCH_RESULT_URL)
+              .evaluate(function(resultUrl, recentArticle, recentArticleTime, recentSignal, titleSelector, desSelector) {
+                const recentSignalText = document.querySelector(recentSignal).innerText.trim();
+                if (recentSignalText !== '最近文章：') {
+                  return { noUpdate: true };
+                }
+                const article = document.querySelector(recentArticle);
+                const time = document.querySelector(recentArticleTime);
+                let result = {};
+                if (article && time) {
+                  result = {
+                    title: document.querySelector(titleSelector).innerText.trim(),
+                    description: document.querySelector(desSelector).innerText.trim(),
+                    recentArticle: article.innerText.trim(),
+                    time: time.innerText.trim(),
+                  }
+                }
+                result.url = document.querySelector(resultUrl).href
+                return result;
+              }, SEARCH_RESULT_URL, RECENT_ARTICLE, RECENT_ARTICLE_TIME, RECENT_SIGNAL, FEED_TITLE, FEED_DESCRIPTION)
+          ).then(({url, recentArticle, time, noUpdate, title, description}) => {// go to result url
             createFeed(id, title, description); // create feed
             listUrl = url;
             if (noUpdate) {
