@@ -102,11 +102,12 @@ function downloadImages(id, images, data) {
     .then(() => data);
 }
 
-function saveArticle(id, { title, author, date, content, fullPath, images }) {
+function saveArticle(id, { title, author, date, content, fullPath, images, wechat_source }) {
   return downloadImages(id, images, `---
 ${yaml.safeDump({
   title,
   author,
+  wechat_source,
   date: `${new Date(date).toISOString().slice(0, 19).replace('T', ' ')} +0000`
 })}
 ---
@@ -208,10 +209,12 @@ function processArticles(id, processingIndex, cacheImage) {
               e.parentElement.insertBefore(newImg, e);
               e.remove();
             });
+            let source = msg_source_url && ` | <a href="${msg_source_url}"/>阅读原文</a>`;
             return {
               date: new Date(document.querySelector('#post-date').innerText),
               author: document.querySelector('#post-date ~ em,#post-user').innerText,
-              content: document.querySelector('.rich_media_content').innerHTML.trim(),
+              content: `${document.querySelector('.rich_media_content').innerHTML.trim()}<hr/><a href="${location.href}">微信地址</a>${source}`,
+              wechat_source: msg_source_url,
               images,
             };
           })
@@ -240,10 +243,10 @@ layout: null
   <updated>{{ site.time | date_to_xmlschema }}</updated>
   <id>${id}</id>
 
-  {% for post in site.${id} %}
+  {% for post in site.${id} limit:10 %}
   <entry>
     <id>{{ post.id }}</id>
-    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <link type="text/html" rel="alternate" href="{% if post.wechat_source.blank? %}{{ post.url }}{% else %}{{ post.wechat_source }}{% endif %}"/>
     <title>{{ post.title | xml_escape }}</title>
     <updated>{{ post.date | date_to_xmlschema }}</updated>
     <author>
