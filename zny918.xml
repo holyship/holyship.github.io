@@ -10,17 +10,17 @@ layout: null
   <link type="application/atom+xml" rel="self" href="/zny918.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
   <id>zny918</id>
-
-  {% for post in site.zny918 %}
+  {% assign posts = site.zny918 | reverse | limit:10 %}
+  {% for post in posts %}
   <entry>
     <id>{{ post.id }}</id>
-    <link type="text/html" rel="alternate" href="{{ post.url }}"/>
+    <link type="text/html" rel="alternate" href="{% if post.wechat_source == blank or post.wechat_source == nil %}{{ post.url }}{% else %}{{ post.wechat_source }}{% endif %}"/>
     <title>{{ post.title | xml_escape }}</title>
     <updated>{{ post.date | date_to_xmlschema }}</updated>
     <author>
       <name>{{ post.author | xml_escape }}</name>
     </author>
-    <content type="html"><![CDATA[{{ post.content }}]]></content>
+    <content type="html"><![CDATA[{{ post.content }} | <a href="{{ post.url }}">缓存地址</a>]]></content>
   </entry>
   {% endfor %}
 
