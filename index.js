@@ -231,10 +231,10 @@ layout: null
   <updated>{{ site.time | date_to_xmlschema }}</updated>
   <id>${id}</id>
 
-  {% for post in site.${id} limit:10 %}
+  {% for post in site.${id} reversed limit:10 %}
   <entry>
     <id>{{ post.id }}</id>
-    <link type="text/html" rel="alternate" href="{% if post.wechat_source.blank? %}{{ post.url }}{% else %}{{ post.wechat_source }}{% endif %}"/>
+    <link type="text/html" rel="alternate" href="{% if post.wechat_source == blank %}{{ post.url }}{% else %}{{ post.wechat_source }}{% endif %}"/>
     <title>{{ post.title | xml_escape }}</title>
     <updated>{{ post.date | date_to_xmlschema }}</updated>
     <author>
