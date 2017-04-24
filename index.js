@@ -130,11 +130,10 @@ function sleep(time = DEFAULT_SLEEP_TIME) {
 function waitUntilNoVerify() {
   return nightmare
     .wait('body')
-    .exists('.page_verify')
+    .exists('.page_verify,#seccodeForm')
     .then(verify => {
       if (verify) {
-        console.log('waiting for verify');
-        console.log('\007'); // beep
+        console.log('waiting for verify\007');
         return sleep(1000 * 10)
           .then(() => waitUntilNoVerify());
       }
@@ -234,7 +233,7 @@ layout: null
   {% for post in posts %}
   <entry>
     <id>{{ post.id }}</id>
-    <link type="text/html" rel="alternate" href="{% if post.wechat_source == blank %}{{ post.url }}{% else %}{{ post.wechat_source }}{% endif %}"/>
+    <link type="text/html" rel="alternate" href="{% if post.wechat_source == blank or post.wechat_source == nil %}{{ post.url }}{% else %}{{ post.wechat_source }}{% endif %}"/>
     <title>{{ post.title | xml_escape }}</title>
     <updated>{{ post.date | date_to_xmlschema }}</updated>
     <author>
@@ -283,6 +282,7 @@ function crawl(feeds) {
         }
         return nightmare
           .goto(`http://wx.sogou.com/weixin?type=1&query=${id}&ie=utf8&s_from=input&_sug_=y&_sug_type_=`)
+          .then(() => waitUntilNoVerify())
           .wait(SEARCH_RESULT_URL)
           .evaluate(function(resultUrl, recentArticle, recentArticleTime, recentSignal, titleSelector, desSelector) {
             const recentSignalText = document.querySelector(recentSignal).innerText.trim();
