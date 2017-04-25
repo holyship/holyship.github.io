@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>大玩家张磊</title>
-  <description>大玩家,讲述年轻人的旅行、消费和投资的话题,内容由作者张磊100%原创.如果你对银行、用卡、旅行、投资知识感兴趣,不妨跟大玩家一起体验一下高品质的生活.</description>
+  <title>undefined</title>
+  <description>undefined</description>
   <link href="/seniorplayer.xml"/>
   <link type="application/atom+xml" rel="self" href="/seniorplayer.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
