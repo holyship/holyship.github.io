@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>与食巨近以二会友</title>
+  <description>珵嘻嘻(熊.二,middle name 不靠谱),与食巨近,贱多食广,五行缺肉,命里缺觉,好吃懒做,不学无术.178cm,牛津计算机女博土,去过50+国家,KO世遗控小组成员.With YWY.</description>
+  <link href="/yierhuiyou.xml"/>
+  <link type="application/atom+xml" rel="self" href="/yierhuiyou.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>yierhuiyou</id>
+  {% assign posts = site.yierhuiyou | reverse | limit:10 %}
+  {% for post in posts %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{% if post.wechat_source == blank or post.wechat_source == nil %}{{ post.url }}{% else %}{{ post.wechat_source | xml_escape }}{% endif %}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }} | <a href="{{ post.url }}">缓存地址</a>]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>
