@@ -197,7 +197,7 @@ function processArticles(id, processingIndex, list, cacheImage) {
           e.parentElement.insertBefore(newImg, e);
           e.remove();
         });
-        let source = msg_source_url && ` | <a href="${msg_source_url}"/>阅读原文</a>`;
+        let source = msg_source_url && ` | <a href="${msg_source_url}">阅读原文</a>`;
         return {
           date: new Date(document.querySelector('#post-date').innerText),
           author: document.querySelector('#post-date ~ em,#post-user').innerText,
