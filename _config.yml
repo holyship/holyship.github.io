@@ -4,6 +4,11 @@ exclude:
   - Gemfile.lock
 
 collections:
+  # 婉如一勺
+  # 弱水三千只要一勺
+  likeyishao:
+    cache_image: false
+    output: true
   # 与食巨近以二会友
   # 珵嘻嘻(熊.二,middle name 不靠谱),与食巨近,贱多食广,五行缺肉,命里缺觉,好吃懒做,不学无术.178cm,牛津计算机女博土,去过50+国家,KO世遗控小组成员.With YWY.
   yierhuiyou:
