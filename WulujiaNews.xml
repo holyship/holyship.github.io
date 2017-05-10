@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>笨上加笨</title>
-  <description>您好,欢迎关注笨上加笨 :)</description>
+  <title>小密圈的一千种玩法</title>
+  <description>欢迎关注「小密圈的一千种玩法」,我们会推荐各种好玩的圈子、有趣的玩法 :)</description>
   <link href="/WulujiaNews.xml"/>
   <link type="application/atom+xml" rel="self" href="/WulujiaNews.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
