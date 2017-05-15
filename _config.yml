@@ -4,6 +4,11 @@ exclude:
   - Gemfile.lock
 
 collections:
+  # ikanxue
+  # 致力于移动与安全研究的开发者社区，看雪学院(kanxue.com)官方微信公众帐号。
+  ikanxue:
+    cache_image: true
+    output: true
   # 婉如一勺
   # 弱水三千只要一勺
   likeyishao:
