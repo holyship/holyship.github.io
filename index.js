@@ -167,6 +167,20 @@ function fileExist(patten) {
   });
 }
 
+function jumpIfOriginal() {
+  return nightmare
+    .wait('body')
+    .exists('.original_panel_tool')
+    .then(original => {
+      if (original) {
+	    return nightmare.evaluate(function() {
+          return document.querySelector('.original_panel_tool a').href;
+        })
+		.then(url => nightmare.goto(url));
+      }
+    });
+}
+
 function processArticles(id, processingIndex, list, cacheImage) {
   if (processingIndex < 0) return Promise.resolve();
   console.log(`start on #${processingIndex}`);
@@ -184,6 +198,7 @@ function processArticles(id, processingIndex, list, cacheImage) {
   return nightmare
     .goto(article.url)
     .then(() => waitUntilNoVerify())
+    .then(() => jumpIfOriginal())
     .then(() =>
       nightmare.wait('.rich_media_content')
       .evaluate(function() {
