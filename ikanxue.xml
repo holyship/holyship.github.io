@@ -10,7 +10,7 @@ layout: null
   <link type="application/atom+xml" rel="self" href="/ikanxue.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
   <id>ikanxue</id>
-  {% assign posts = site.ikanxue | reverse | limit:10 %}
+  {% assign posts = site.ikanxue | reverse | limit:30 %}
   {% for post in posts %}
   <entry>
     <id>{{ post.id }}</id>
