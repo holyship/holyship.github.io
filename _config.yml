@@ -4,6 +4,11 @@ exclude:
   - Gemfile.lock
 
 collections:
+  # 槽边往事
+  # 和菜头的微信Blog,用于分享各种新鲜资讯
+  bitsea:
+    cache_image: true
+    output: true
   # ikanxue
   # 致力于移动与安全研究的开发者社区，看雪学院(kanxue.com)官方微信公众帐号。
   ikanxue:
