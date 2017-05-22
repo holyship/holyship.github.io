@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>槽边往事</title>
+  <description>和菜头的微信Blog,用于分享各种新鲜资讯</description>
+  <link href="/bitsea.xml"/>
+  <link type="application/atom+xml" rel="self" href="/bitsea.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>bitsea</id>
+  {% assign posts = site.bitsea | reverse | limit:10 %}
+  {% for post in posts %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{% if post.wechat_source == blank or post.wechat_source == nil %}{{ post.url }}{% else %}{{ post.wechat_source | xml_escape }}{% endif %}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }} | <a href="{{ post.url }}">缓存地址</a>]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

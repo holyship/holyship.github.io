@@ -4,7 +4,7 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>大鹏的小影集</title>
+  <title>大鹏小集</title>
   <description>用照片记录生活</description>
   <link href="/photobystan.xml"/>
   <link type="application/atom+xml" rel="self" href="/photobystan.xml"/>

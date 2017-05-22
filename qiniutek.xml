@@ -5,7 +5,7 @@ layout: null
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title>七牛云</title>
-  <description>七牛云,开发者的互联网创新加速引擎.</description>
+  <description>七牛云是国内领先的企业级公有云服务商,致力于打造以数据为核心的场景化 PaaS 服务.围绕富媒体场景,七牛先后推出了对象存储,融合 CDN 加速,数据通用处理,内容反垃圾服务,以及直播云服务等.</description>
   <link href="/qiniutek.xml"/>
   <link type="application/atom+xml" rel="self" href="/qiniutek.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
