@@ -7,12 +7,12 @@ collections:
   # 槽边往事
   # 和菜头的微信Blog,用于分享各种新鲜资讯
   bitsea:
-    cache_image: true
+    cache_image: false
     output: true
   # ikanxue
   # 致力于移动与安全研究的开发者社区，看雪学院(kanxue.com)官方微信公众帐号。
   ikanxue:
-    cache_image: true
+    cache_image: false
     output: true
   # 婉如一勺
   # 弱水三千只要一勺
@@ -37,12 +37,12 @@ collections:
   # 笨上加笨
   # 您好，欢迎关注笨上加笨:)
   WulujiaNews:
-    cache_image: true
+    cache_image: false
     output: true
   # 半轻人
   # 王咏刚，笔名半轻人。技术宅，逻辑控。伪极客，真笨伯。用emacs写小说，用平水韵下酒。在太阳系最酷最大的网络公司上班，梦见二进制的下午茶。
   ban-qing-ren:
-    cache_image: true
+    cache_image: false
     output: true
   # 暴走看啥片儿
   # 史上最实惠、最接地气的影评节目！绝对是您居家旅行必备观影指南！
@@ -77,7 +77,7 @@ collections:
   # caoz的梦呓
   # caoz的心得与分享，只此一家，别无分号。
   caozsay:
-    cache_image: true
+    cache_image: false
     output: true
   # 程序人生
   # 十年漫漫程序人生，打过各种杂，也做过让我骄傲的软件；管理过数十人的团队，还带领一班兄弟姐妹创过业，目前在硅谷一家创业公司担任VP。关注程序人生，了解程序猿，学做程序猿，做好程序猿，让我们的程序人生精彩满满。
@@ -87,7 +87,7 @@ collections:
   # 待字闺中
   # 深度分析大数据、深度学习、人工智能等技术，切中实际应用场景，为大家授业解惑。间或，也会介绍国内外相关领域有趣的面试题。
   daiziguizhongren:
-    cache_image: true
+    cache_image: false
     output: true
   # 大玩家张磊
   # 大玩家，讲述年轻人的旅行、消费和投资的话题，内容由作者张磊100%原创。如果你对银行、用卡、旅行、投资知识感兴趣，不妨跟大玩家一起体验一下高品质的生活。
@@ -102,17 +102,17 @@ collections:
   # 嘀嗒嘀嗒
   # 感谢订阅，我是朱赟，也叫angela，很多人叫我安姐。硅谷AirbnbStaffEngineer。希望透过女码工的视角为您讲述硅谷技术人的故事和思考。
   AngelaTalk:
-    cache_image: true
+    cache_image: false
     output: true
   # 大鹏的小影集
   # 用照片记录生活
   photobystan:
-    cache_image: true
+    cache_image: false
     output: true
   # 二爷鉴书
   # 第一时间向大家推荐好书和介绍，同时坚决揭露烂书，以IT、互联网行业为主。个人品味，仅供参考。
   findbook:
-    cache_image: true
+    cache_image: false
     output: true
   # 峰瑞资本
   # FreeService,FreeStyle,FreeStartup,FreeSpirit.
@@ -122,22 +122,22 @@ collections:
   # 枫间语
   # 把最真实的世界，写给你看。
   gh_79f23be0596f:
-    cache_image: true
+    cache_image: false
     output: true
   # 飞总的IT世界面面观
   # 飞总，旅居西雅图的浙江人，IT人士，08年起从事大数据相关的基础构架的研究和开发，素爱读书，博闻强识，对计算机行业和前沿技术的发展有深刻和独到的见解，希望通过这个平台分享他关于IT世界的的心得体会。
   feiitworld:
-    cache_image: true
+    cache_image: false
     output: true
   # 风雪之隅
   # Laruence的个人订阅号
   StormCorner:
-    cache_image: true
+    cache_image: false
     output: true
   # 高可用架构
   # 高可用架构公众号。
   ArchNotes:
-    cache_image: true
+    cache_image: false
     output: true
   # 给产品经理讲技术
   # 为互联网产品经理普及技术基础知识
@@ -152,7 +152,7 @@ collections:
   # GrootSalon
   # 格鲁特分享
   GrootSalon:
-    cache_image: true
+    cache_image: false
     output: true
   # 硅谷周边
   # SiliconValleyNeighborhood.科技，读书，工作生活中引人深思的点滴。100%原创。
@@ -182,7 +182,7 @@ collections:
   # 架构师之路
   # 架构师之路，坚持撰写接地气的架构文章
   road5858:
-    cache_image: true
+    cache_image: false
     output: true
   # 跨界码农
   # 一个码农对技术、生活、管理、八卦的跨界闲聊。你的关注，即是我写作的动力。
@@ -227,7 +227,7 @@ collections:
   # 乱槽之巅
   # 经常吐槽，偶尔分享
   luancaozhidian:
-    cache_image: true
+    cache_image: false
     output: true
   # 懒人在思考
   # 本懒号主要关注点：隐私、攻击、安全开发。从我们这，你至少可以知道当下黑客世界的另类视角。By余弦@LanT34m
@@ -247,7 +247,7 @@ collections:
   # 聊聊架构
   # 在这里煮酒聊架构。
   archtime:
-    cache_image: true
+    cache_image: false
     output: true
   # Microsoft认知服务
   # 微软认知服务（前牛津计划）认证公众号。分享认知服务提供的技术文档，演示，服务，应用精选，行业视野，及媒体动态。愿成为您的最强大脑，让智能服务触手可及。
@@ -262,7 +262,7 @@ collections:
   # 马文的文
   # 安静写作，焦虑思考。
   marvinsthought:
-    cache_image: true
+    cache_image: false
     output: true
   # Megvii旷视科技
   # 旷视(Face++)是一家以计算机视觉为核心的人工智能企业，致力于为行业型用户和个人型用户提供全方位的智能解决方案和智能数据服务。
@@ -292,7 +292,7 @@ collections:
   # 奇舞周刊
   # 《奇舞周刊》是由奇舞团维护的前端技术周刊。每周五向大家推送前端技术文章。
   gh_ffb279ea1674:
-    cache_image: true
+    cache_image: false
     output: true
   # 趣火星
   # 大家好，我是许妙成，趣火星原来是我的创业项目，现在是我的个人blog，希望可以和大家分享一些和人文、科技、商业相关的信息。BP传送门：xumiaocheng@unityvc.com
@@ -307,7 +307,7 @@ collections:
   # qing bao si cao
   # ignore due to it's empty
   # gh_d95a99307fdc:
-  #   cache_image: true
+  #   cache_image: false
   #   output: true
   # RTBChina
   # RTBChina是关于中国网络广告新生态系统的资讯精选。介绍DSP,SSP,AdExchange,DMP,和数据交易平台在中国发展状况。www.RTBChina.com编纂维护最新的《中国RTB广告技术产业地图》和行业研究报告
@@ -357,12 +357,12 @@ collections:
   # 兽脑的世界
   # 野兽码字的地方
   zny918:
-    cache_image: true
+    cache_image: false
     output: true
   # 探索时间
   # 探索有趣的事，遇见有趣的人。
   tansuo-time:
-    cache_image: true
+    cache_image: false
     output: true
   # 腾讯
   # 腾讯公司唯一官方帐号。
@@ -397,17 +397,17 @@ collections:
   # 王路在隐身
   # 发布文章。
   i_wanglu:
-    cache_image: true
+    cache_image: false
     output: true
   # 歪理邪说
   # 一切关于未来的故事在实现之前都是歪理邪说。
   wxieshuo:
-    cache_image: true
+    cache_image: false
     output: true
   # WeMobileDev
   # 微信移动客户端开发团队官号，分享微信在Android、iOS、Mac、Winphone、Windows等平台的开发经验、前沿技术，以及一些鲜为人知的小故事。
   WeMobileDev:
-    cache_image: true
+    cache_image: false
     output: true
   # 微软丹棱街5号
   # 微软亚太研发集团官方账号，也是微软与极客朋友们分享黑科技、互动交流的第一窗口。欢迎走进丹棱街5号，探索科技力量，感悟澎湃创新！
@@ -442,12 +442,12 @@ collections:
   # 悠然间
   # 素食、教育、国际象棋、瑜伽、科技、音乐、茶……分享悠然生活，欢迎随时转转
   Rosetime_thu:
-    cache_image: true
+    cache_image: false
     output: true
   # 余晟以为
   # 我是这么以为的，当然你也可以那么以为
   yurii-says:
-    cache_image: true
+    cache_image: false
     output: true
   # 夜航船Northfleet
   # 我们真实可感，躲无可躲的生活。
@@ -462,7 +462,7 @@ collections:
   # 终端安全那些事儿
   # 关注、分享终端安全。
   zhongduananquan:
-    cache_image: true
+    cache_image: false
     output: true
   # 左手单反右手键盘
   # legendlin的个人小站
@@ -482,5 +482,5 @@ collections:
   # 301在路上
   # 着重宣传企业和个人信息安全意识，帮助大家更好地保护自己。
   a301zls:
-    cache_image: true
+    cache_image: false
     output: true
