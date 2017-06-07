@@ -4,13 +4,13 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>ChesleaBurns</title>
+  <title>Chelseaburns</title>
   <description>多看,多说,多思考.</description>
-  <link href="/ChesleaBurns.xml"/>
-  <link type="application/atom+xml" rel="self" href="/ChesleaBurns.xml"/>
+  <link href="/gh_aa017d22f171.xml"/>
+  <link type="application/atom+xml" rel="self" href="/gh_aa017d22f171.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
-  <id>ChesleaBurns</id>
-  {% assign posts = site.ChesleaBurns | reverse | limit:10 %}
+  <id>gh_aa017d22f171</id>
+  {% assign posts = site.gh_aa017d22f171 | reverse | limit:10 %}
   {% for post in posts %}
   <entry>
     <id>{{ post.id }}</id>

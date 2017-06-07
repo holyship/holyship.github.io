@@ -5,7 +5,7 @@ layout: null
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title>马文的文</title>
-  <description>安静写作,焦虑思考.</description>
+  <description>鹅厂产品经理一枚,分享产品认知和观察,邀你共同成长.</description>
   <link href="/marvinsthought.xml"/>
   <link type="application/atom+xml" rel="self" href="/marvinsthought.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
