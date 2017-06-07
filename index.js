@@ -350,8 +350,10 @@ function crawl(feeds) {
                   .evaluate(function(titleSelector, infoSelector) {
                     const list = [];
                     document.querySelectorAll(titleSelector).forEach(e => {
+                      let url = e.getAttribute('hrefs');
+                      if (!url.startsWith('http')) url = location.origin + url;
                       list.push({
-                        url: location.origin + e.getAttribute('hrefs'),
+                        url,
                         title: e.innerText.replace(/\n|\r|\t/g, '').trim(),
                       });
                     });
