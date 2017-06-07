@@ -310,7 +310,7 @@ function crawl(feeds) {
                 let result = {};
                 if (article && time) {
                   result = {
-                    title: document.querySelector(titleSelector).innerText.trim(),
+                    title: document.querySelector(titleSelector).innerText.trim().replace(/^\s*原创\s*(.+)/, "$1"),
                     description: document.querySelector(desSelector).innerText.trim(),
                     recentArticle: article.innerText.trim(),
                     time: time.innerText.trim(),
