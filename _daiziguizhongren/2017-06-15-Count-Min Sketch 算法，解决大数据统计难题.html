@@ -1,0 +1,13 @@
+---
+title: Count-Min Sketch 算法，解决大数据统计难题
+author: 陈老师
+wechat_source: >-
+  http://mp.weixin.qq.com/s?timestamp=1498052168&src=3&ver=1&signature=nULoNfhbsabgcFJEB9PUQ0QYV0RgmS3B2y*WiVzMhC--K22xJ1SN8F9vg7FqhfYsTPL9bXZQl1ooLeX9MEyNggyv94*6X1QXzHOThsFvnb5CiCHR2hfBQFlVZ16RAc4lOda-huhzthrv40evK*vlEZVsqbTGub7kXehmSlhEWMQ=
+date: '2017-06-15 00:00:00 +0000'
+
+---
+
+{% raw  %}
+<p>如果老板让你统计一个实时的数据流中元素出现的频率，并且准备随时回答某个元素出现的频率，不需要的精确的计数，那该怎么办？<br></p><p><br></p><p>直觉告诉我们可能需要一个巨大的 HashMap 来统计各个元素的出现频率，但由于不同的元素的个数可能非常大，以至于是个天文数字，要求的内存可能会非常大，从而不切实际。同时，又要求我们实时计算，实时回答，当HashMap的冲突很高时，最坏的情况的时间复杂度可能无法满足实时的要求。</p><p><br></p><p>加上前面要求不需要精确的计数，这么说来，必须寻找新的算法。<br></p><p><br></p><p>那么，Count-Min Sketch 就是用来解决此类问题的算法。</p><p><br></p><p>这个算法的技巧是：</p><p><br></p><p>不存储所有的不同的元素，只存储它们Sketch的计数。</p><p><br></p><p>基本的思路是这样的：</p><p><br></p><p>创建一个长度为 x 的数组，用来计数，初始化每个元素的计数值为 0；</p><p>对于一个新来的元素，哈希到 0 到 x 之间的一个数，比如哈希值为 i，作为数组的位置索引；</p><p>这是，数组对应的位置索引 i 的计数值加 1；</p><p>那么，这时要查询某个元素出现的频率，只要简单的返回这个元素哈希望后对应的数组的位置索引的计数值即可。</p><p><br></p><p>考虑到使用哈希，会有冲突，即不同的元素哈希到同一个数组的位置索引，这样，频率的统计都会偏大。</p><p><br></p><p>如何优化？<br></p><p><br></p><p>使用多个数组，和多个哈希函数，来计算一个元素对应的数组的位置索引；<br></p><p>那么，要查询某个元素的频率时，返回这个元素在不同数组中的计数值中的最小值即可。</p><p><br></p><p><img src="http://mmbiz.qpic.cn/mmbiz_png/uVhqWvaiaiaPO4GjIzlV0KUUocn1E1YOXDqwGEO3ibr4icNYcXlAOicMiazMZAiatOgLm8Lslvjq9Mh3Tc2lYricCcyzuA/0?wx_fmt=png" style="width: 770px !important; height: 518.571px !important;"><br></p><p><img src="http://mmbiz.qpic.cn/mmbiz_png/uVhqWvaiaiaPO4GjIzlV0KUUocn1E1YOXDmkEULGcibBLtwGmuVoARDkh6KMotz4jH0rD9ZuPAzhm93DALqIGJPkQ/0?wx_fmt=png" style="width: 770px !important; height: 582.472px !important;"></p><p><br></p><p>是不是很美妙？显然，这个改进的算法比原始的算法精确多了，但还是会有冲突，但是冲突少多了。</p><p><br></p><p>这个算法的特点是：</p><p><br></p><p>只会估算偏大，永远不会偏小；</p><p>只需要固定大小的内存和计算时间，和需要统计的元素多少无关；</p><p>对于低频的元素，估算值相对的错误可能会很大。</p><hr/><a href="http://mp.weixin.qq.com/s?timestamp=1498052168&src=3&ver=1&signature=nULoNfhbsabgcFJEB9PUQ0QYV0RgmS3B2y*WiVzMhC--K22xJ1SN8F9vg7FqhfYsTPL9bXZQl1ooLeX9MEyNggyv94*6X1QXzHOThsFvnb5CiCHR2hfBQFlVZ16RAc4lOda-huhzthrv40evK*vlEZVsqbTGub7kXehmSlhEWMQ=">微信地址</a>
+{% endraw  %}
+
