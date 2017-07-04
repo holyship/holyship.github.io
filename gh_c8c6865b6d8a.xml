@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>OfferCome猎头</title>
-  <description>专注于互联网、移动互联网的猎头资讯平台.</description>
+  <title>undefined</title>
+  <description>undefined</description>
   <link href="/gh_c8c6865b6d8a.xml"/>
   <link type="application/atom+xml" rel="self" href="/gh_c8c6865b6d8a.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

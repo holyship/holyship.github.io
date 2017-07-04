@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>undefined</title>
-  <description>undefined</description>
+  <title>航班管家老机长</title>
+  <description>专注于移动互联网从业者技术交流、职业发展,分析移动互联网最新发展趋势,提供最有价值的沙龙论坛.</description>
   <link href="/gh_ce7347f4401e.xml"/>
   <link type="application/atom+xml" rel="self" href="/gh_ce7347f4401e.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

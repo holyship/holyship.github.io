@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>懒人在思考</title>
-  <description>本懒号主要关注点:隐私、攻击、安全开发.从我们这,你至少可以知道当下黑客世界的另类视角.By 余弦@LanT34m</description>
+  <title>undefined</title>
+  <description>undefined</description>
   <link href="/lazy-thought.xml"/>
   <link type="application/atom+xml" rel="self" href="/lazy-thought.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

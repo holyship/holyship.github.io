@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>Chelseaburns</title>
-  <description>多看,多说,多思考.</description>
+  <title>undefined</title>
+  <description>undefined</description>
   <link href="/gh_aa017d22f171.xml"/>
   <link type="application/atom+xml" rel="self" href="/gh_aa017d22f171.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
