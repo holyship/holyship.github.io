@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>undefined</title>
-  <description>undefined</description>
+  <title>BetterRead</title>
+  <description>有理、有趣、有用的英文读物推介.</description>
   <link href="/BetterRead.xml"/>
   <link type="application/atom+xml" rel="self" href="/BetterRead.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

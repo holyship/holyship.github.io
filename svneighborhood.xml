@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>undefined</title>
-  <description>undefined</description>
+  <title>硅谷周边</title>
+  <description>Silicon Valley Neighborhood. 科技,读书,工作生活中引人深思的点滴.100%原创.</description>
   <link href="/svneighborhood.xml"/>
   <link type="application/atom+xml" rel="self" href="/svneighborhood.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

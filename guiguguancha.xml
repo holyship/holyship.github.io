@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>硅谷观察</title>
-  <description>周恒星的个人公众号.前驻硅谷科技记者,现乐视体育海外商务总监.偶尔发现感想,仅代表个人观点.</description>
+  <title>undefined</title>
+  <description>undefined</description>
   <link href="/guiguguancha.xml"/>
   <link type="application/atom+xml" rel="self" href="/guiguguancha.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

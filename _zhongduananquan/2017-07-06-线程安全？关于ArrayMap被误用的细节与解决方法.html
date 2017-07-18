@@ -1,0 +1,169 @@
+---
+title: 线程安全？关于ArrayMap被误用的细节与解决方法
+author: 王亮
+wechat_source: >-
+  http://mp.weixin.qq.com/s?timestamp=1500386485&src=3&ver=1&signature=FkzcjJJ48va4gLuFLNnuhow9cvlKz4cFd7dYsliFKz9TMpUUX4WW9IJUbZhv2JPEKLEXnqvFZ5z*EUb-LGVAamykLPNN*oA0QvE3G-9zAhxM00zF-PS-thvADxJ2IxA71Vk05wQSHZgf5LRhgtCvjSenD19ja07b9*I4p5TYScQ=
+date: '2017-07-06 00:00:00 +0000'
+
+---
+
+{% raw  %}
+<h2 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.4em;">1 / 背景说明</h2><p style="margin: 0px 0px 1.2em !important;">Intent是Android开发过程中常用组件，用于启动Activity和Service，或者发送BroadCast并传递参数，我们通过putxxx()或者getxxx()可以很方便的传递信息。Intent和Bundle经常联合使用，Intent内部数据存储就是通过Bundle实现的，而Bundle实际上就是一个封装的Map。Android4.4以前Bunlde是用HashMap实现的，从Android4.4开始替换为ArrayMap。</p><p style="margin: 0px 0px 1.2em !important;">Bundle还实现对象的序列化，可在不同的ClassLoader之间传递自定义对象，这种特性除了用于跨进程通信，还可以用于不同插件ClassLoader之间的参数传递。</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0px 0.15em; background-color: rgb(248, 248, 248); white-space: pre; overflow: auto; border-radius: 3px; border-width: 1px; border-style: solid; border-color: rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;">// 发送
+bundle.setClassLoader(SelfObject.class.getClassLoader());
+bundle.putParcelable("self_object", new SelfObject());
+msg.setData(bundle);
+// 接收
+bundle.setClassLoader(getClass().getClassLoader());
+SelfObject so = bundle.getParcelable("self_object");</code></pre><p style="margin: 0px 0px 1.2em !important;">最近笔者发现自己的项目中出现大量ClassCastException问题,crash堆栈如下</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0px 0.15em; background-color: rgb(248, 248, 248); white-space: pre; overflow: auto; border-radius: 3px; border-width: 1px; border-style: solid; border-color: rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;">java.lang.ClassCastException: java.lang.String cannot be cast to java.lang.Object[]
+android.util.ArrayMap.allocArrays(ArrayMap.java:187)
+android.util.ArrayMap.put(ArrayMap.java:459)
+android.os.Bundle.putParcelable(Bundle.java:323)
+android.content.Intent.putExtra(Intent.java:6176)</code></pre><p style="margin: 0px 0px 1.2em !important;">而从代码上看，触发的场景十分普通且分布广泛，这段代码几乎所有Android项目很常见的，Intent和Bundle使用的时候都是新创建的对象，看起来并没有什么问题</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0px 0.15em; background-color: rgb(248, 248, 248); white-space: pre; overflow: auto; border-radius: 3px; border-width: 1px; border-style: solid; border-color: rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;">Intent intent = new Intent();
+intent.putExtra("key", "value");//发生crash</code></pre><p style="margin: 0px 0px 1.2em !important;">分析Crash用户的机型特征，发现都是android4.4及以上机型，没有明显的机型或者厂商rom特征，说明这不是一个机型适配问题。为了搞清楚这个Crash问题发生的原因，我们需要深入的了解一下ArrayMap的实现。</p><h2 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.4em;">2 / ArrayMap容易被误用的细节</h2><h4 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.2em;">2.1 / Goolge为什么要用ArrayMap替换HashMap</h4><p style="margin: 0px 0px 1.2em !important;">区别于传统的JVM，Android平台使用了Dalvik虚拟机，适合内存和处理器速度有限的手机平台。每个Android进程单独运行一个虚拟机，防止单个程序崩溃时导致所有程序被关闭。为了保证多个应用程序同时运行，Android限制了单个进程内存上限，这导致每个应用程序的内存更加有限。</p><p style="margin: 0px 0px 1.2em !important;">Android开发时，我们通常是直接使用Java api，但在Android移动平台上，这些api并不都能达到较好的性能。所以Google特别为Android平台设计了一些更加高效的api。例如我们常用的HashMap，好用但却很占内存，Google推出了SpareArray和ArrayMap来替代部分使用场景下的HashMap。</p><p style="margin: 0px 0px 1.2em !important;">我们先简单的看一下HashMap的实现，其内部含有一个链表数组HashMapEntry<k, v="">[] table，每个Entry链表包含所有Hash值相同的Entry。查找key-value时，先通过通过hash &amp; (table.length - 1) 位运算来定位Entry链表，再遍历链表，查找key值相同的Entry。一般情况下，hash值相同的Entry应该不多，所以HashMap的查找效率是很高的。</k,></p><p style="margin: 0px 0px 1.2em !important;">但HashMap为了存储数据，新增了HashMapEntry对象来封装key-value，增加了内存占用，且HashMap每次扩容2倍浪费的空间较多（相对ArrayMap每次扩容1.5倍）；另外每次扩容或者压缩空间时，HashMap需要重新建立整个Hash表，相对ArrayMap的数组复制效率较低。</p><p><img src="http://mmbiz.qpic.cn/mmbiz_png/Sa7mwT4mK89m2fcBfMqSnRfSX0TwyTfcolGZYXUX98pyCqZZdEV6dvIeKKhdIhx2XPcoEotzIVrWA2Pm7MzY8g/0?wx_fmt=png" style="width: 380px !important; height: 233px !important;"></p><h4 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.2em;">2.2 / ArrayMap的实现</h4><p style="margin: 0px 0px 1.2em !important;">首先看一下ArrayMap的注释：</p><blockquote style="margin: 1.2em 0px;border-left: 4px solid rgb(221, 221, 221); padding: 0px 1em; color: rgb(119, 119, 119); quotes: none;"><p style="margin: 0px 0px 1.2em !important;">ArrayMap是一个通用的key-&gt; value映射数据结构，设计为比传统的HashMap有更高的内存效率。它通过Array数组来实现映射关系，一个Integer Array来存储Hash值，一个Object Array来存储key/value Pairs, 它避免创建额外的Entry对象来存储数据，同时有效的控制Array的增长（增加entry时，它仅需要复制数组，而不是重建一个hash map表）。</p><p style="margin: 0px 0px 1.2em !important;">对于含有大量数据的Map表，ArrayMap比传统的HashMap慢，因为它使用二分法查找，插入或者删除需要操作Array中的Entry。对于包含几百个数据的Map表，ArrayMap对比HashMap性能差异不明显，低于50%。</p></blockquote><p style="margin: 0px 0px 1.2em !important;">ArrayMap用两个Array来实现key-value映射关系，其中mHashes存储key的hash值，mArray存储对应的key和value。</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0px 0.15em; background-color: rgb(248, 248, 248); white-space: pre; overflow: auto; border-radius: 3px; border-width: 1px; border-style: solid; border-color: rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;">int[] mHashes; &nbsp;//按大小排列
+Object[] mArray;//mHashes的两倍长度，index&lt;&lt;1和(index&lt;&lt;1)+1分别存储hash值对应的key和value
+int mSize;
+//查找
+public V get(Object key) {
+ &nbsp; &nbsp;final int index = key == null ? indexOfNull() : indexOf(key, key.hashCode());
+ &nbsp; &nbsp;return index &gt;= 0 ? (V)mArray[(index&lt;&lt;1)+1] : null;
+}
+//删除
+public V remove(Object key) {
+ &nbsp; &nbsp;int index = key == null ? indexOfNull() : indexOf(key, key.hashCode());
+ &nbsp; &nbsp;if (index &gt;= 0) {
+ &nbsp; &nbsp; &nbsp; return removeAt(index);
+ &nbsp; &nbsp;}
+ &nbsp; &nbsp;return null;
+}
+
+//添加 &nbsp; &nbsp;
+public V put(K key, V value) {
+ &nbsp; ...
+ &nbsp; mHashes[index] = hash;
+ &nbsp; mArray[index&lt;&lt;1] = key;
+ &nbsp; mArray[(index&lt;&lt;1)+1] = value;
+ &nbsp; mSize++; &nbsp; &nbsp; &nbsp;
+ &nbsp; return null;
+}
+
+int indexOf(Object key, int hash) {
+ &nbsp; &nbsp;final int N = mSize;
+ &nbsp; &nbsp;...
+ &nbsp; &nbsp;int index = ContainerHelpers.binarySearch(mHashes, N, hash);
+ &nbsp; &nbsp;...
+ &nbsp; &nbsp;if (index &lt; 0) {
+ &nbsp; &nbsp; &nbsp; return index;
+ &nbsp; &nbsp;}
+ &nbsp; &nbsp;if (key.equals(mArray[index&lt;&lt;1])) {
+ &nbsp; &nbsp; &nbsp; return index;
+ &nbsp; &nbsp;}
+ &nbsp; &nbsp;// Search for a matching key after the index.
+ &nbsp; &nbsp;int end;
+ &nbsp; &nbsp;for (end = index + 1; end &lt; N &amp;&amp; mHashes[end] == hash; end++) {
+ &nbsp; &nbsp; &nbsp; if (key.equals(mArray[end &lt;&lt; 1])) return end;
+ &nbsp; &nbsp;}
+ &nbsp; &nbsp;// Search for a matching key before the index.
+ &nbsp; &nbsp;for (int i = index - 1; i &gt;= 0 &amp;&amp; mHashes[i] == hash; i--) {
+ &nbsp; &nbsp; &nbsp; if (key.equals(mArray[i &lt;&lt; 1])) return i;
+ &nbsp; &nbsp;}
+ &nbsp; &nbsp;...
+}</code></pre><p style="margin: 0px 0px 1.2em !important;">下面通过几幅示意图来看看ArrayMap最关键的查找，删除和插入操作是怎么实现的。</p><p style="margin: 0px 0px 1.2em !important;">先看查找过程，定位一个key的位置通过key和它的hash值两个参数来实现，如果定位成功直接返回value &nbsp;mArray[(index&lt;&lt;1)+1]。步骤如下：</p><p style="margin: 0px 0px 1.2em !important;"><strong>1、</strong>先二分查找mHashes，找到Key对应的Hash值mHashes[index]（可能有多个相邻对象的hash值相同）</p><p style="margin: 0px 0px 1.2em !important;"><strong>2、</strong>匹配此mHashes[index]对应的key值mArray[index&lt;&lt; 1]与查找的Key是否相同，相同则直接返回定位index</p><p style="margin: 0px 0px 1.2em !important;"><strong>3、</strong>若步骤二匹配不上，再分析mHashes中index临近位置且hash值相同对象（如mHashes[index+1]，mHashes[index+2] … mHashes[index-1], &nbsp;mHashes[index-2] …. ），若其对应的key与Key相同，相同则返回Key匹配的Index</p><p style="margin: 0px 0px 1.2em !important;"><strong>4、</strong>如果有定位到Index就返回对应的Value 返回(V)mArray[(Index&lt;&lt;1)+1]；否则返回null</p><p><img src="http://mmbiz.qpic.cn/mmbiz_png/Sa7mwT4mK89m2fcBfMqSnRfSX0TwyTfc5MUZicPyiaicOCaHH2aku7WyDITicTwXgibT0IlAbhY8PaM2rHbp6b2o1Zw/0?wx_fmt=png" style="width: 329px !important; height: 359px !important;"></p><p><br></p><p style="margin: 0px 0px 1.2em !important;">删除和插入k-v的过程类似，都是先用int indexOf(Object key, int hash)定位index，再分别进行删除和插入操作。当ArrayMap中空间不足时，添加元素前需分别对mHashes和mArray进行扩容操作；当删除元素后，冗余空间较多时，则对数组进行压缩操作。</p><p style="margin: 0px 0px 1.2em !important;">删除：</p><p><img src="http://mmbiz.qpic.cn/mmbiz_png/Sa7mwT4mK89m2fcBfMqSnRfSX0TwyTfc8CoSgIG7Ufd5pTLs69pabv3ywq1IvrWAXScqqNIG3hP0T9wEicIXbsg/0?wx_fmt=png" style="width: 383px !important; height: 62px !important;"></p><p style="margin: 0px 0px 1.2em !important;">插入：</p><p><img src="http://mmbiz.qpic.cn/mmbiz_png/Sa7mwT4mK89m2fcBfMqSnRfSX0TwyTfcvLt3v7xTPKu5ASFPTibfNO7vmPWtdba7OWvbbDX3HSB1k2ia9eicxkIyA/0?wx_fmt=png" style="width: 378px !important; height: 58px !important;"></p><h4 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.2em;">2.3 / ArrayMap的缓存机制分析</h4><p style="margin: 0px 0px 1.2em !important;">分析我们项目中ArrayMap ClassCastException问题的堆栈，发现问题发生在allocArrays中（分配新的hashes和array数组用于存储数据,可能是扩容或者是减少冗余空间调用）。为了减少因频繁分配新数组而产生的旧数组垃圾回收，ArrayMap分别对长度为4和8的数组做了缓存处理，保存在静态变量中。这里我们详细了解一下ArrayMap的缓存设计。</p><p style="margin: 0px 0px 1.2em !important;"><strong>1、缓存过程</strong></p><p style="margin: 0px 0px 1.2em !important;">当执行clear操作或者分配新的数组后，对旧数组执行回收操作时，如果回收数组的长度是4或者8，就保存在静态变量mBaseCache和mTwiceBaseCache中（缓存数组的上限是CACHE_SIZE 10，其中mBaseCacheSize和mTwiceBaseCacheSize用于记录当前的缓存数）。</p><p style="margin: 0px 0px 1.2em !important;"><strong>2、复用过程</strong> &nbsp;</p><p style="margin: 0px 0px 1.2em !important;">当需要分配新的数组长度是4或者8时，先确认是否可从缓存中复用，有缓存则优先使用缓存</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0px 0.15em; background-color: rgb(248, 248, 248); white-space: pre; overflow: auto; border-radius: 3px; border-width: 1px; border-style: solid; border-color: rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;">public &nbsp;static Object[] &nbsp;mBaseCache;
+ &nbsp; public &nbsp;static int &nbsp; &nbsp; &nbsp;mBaseCacheSize;
+ &nbsp; public &nbsp;static Object[] &nbsp;mTwiceBaseCache;
+ &nbsp; public &nbsp;static int &nbsp; &nbsp; &nbsp;mTwiceBaseCacheSize; &nbsp; &nbsp;
+//缓存过程
+private static void freeArrays(final int[] hashes, final Object[] array, final int size) {
+ &nbsp; &nbsp;if (hashes.length == (BASE_SIZE*2)) {
+ &nbsp; &nbsp;......
+ &nbsp; &nbsp;} else if (hashes.length == BASE_SIZE) {
+ &nbsp; &nbsp; &nbsp; &nbsp;synchronized (ArrayMap.class) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if (mBaseCacheSize &lt; CACHE_SIZE) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;array[0] = mBaseCache;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;array[1] = hashes;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;for (int i=(size&lt;&lt;1)-1; i&gt;=2; i--) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;array[i] = null;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mBaseCache = array;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mBaseCacheSize++;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if (DEBUG) Log.d(TAG, "Storing 1x cache " + array
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+ " now have " + mBaseCacheSize + " entries");
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp;}
+}
+//分配新数组，复用过程
+private void allocArrays(final int size) {
+ &nbsp; &nbsp;if (size == (BASE_SIZE*2)) {
+ &nbsp; &nbsp;....... 
+ &nbsp; &nbsp;else if (size == BASE_SIZE) {
+ &nbsp; &nbsp; &nbsp; &nbsp;synchronized (ArrayMap.class) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if (mBaseCache != null) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;final Object[] array = mBaseCache;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mArray = array;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mBaseCache = (Object[])array[0];//发生ClassCastException的地方
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mHashes = (int[])array[1];
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;array[0] = array[1] = null;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mBaseCacheSize--;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if (DEBUG) logd(TAG, "Retrieving 1x cache " + mHashes
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+ " now have " + mBaseCacheSize + " entries " );
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp;}
+ &nbsp; &nbsp;mHashes = new int[size];
+ &nbsp; &nbsp;mArray = new Object[size&lt;&lt;1];
+}</code></pre><p style="margin: 0px 0px 1.2em !important;">缓存及复用过程的代码比较难以理解，缓存一对hashes和array数组时，先把静态变量缓存old cache放到array[0],hashes放到array[1]，array[2]到array[7]赋值为null，最后再将这个array赋值给静态变量cache。通过巧妙的复用array，避免了新建对象来保存缓存数组。</p><p style="margin: 0px 0px 1.2em !important;">以长度为4的数组缓存为例，画一个缓存过程示例图：</p><p><img src="http://mmbiz.qpic.cn/mmbiz_png/Sa7mwT4mK89m2fcBfMqSnRfSX0TwyTfcFmHuryrWvOsQBc2Pia74S8AeXfe2VDzT7pMSfcGib9yuw5IzqPtEuaiag/0?wx_fmt=png" style="width: 324px !important; height: 336px !important;"></p><p style="margin: 0px 0px 1.2em !important;"><br></p><p style="margin: 0px 0px 1.2em !important;">使用eclipse断点查看缓存对象的变化过程，当缓存个数为1时的展示图如下：</p><p><img src="http://mmbiz.qpic.cn/mmbiz_png/Sa7mwT4mK89m2fcBfMqSnRfSX0TwyTfcFxR2q9iapU3pmoPVa0jF2x8x8eCuwPCZ1pcKF0yxvlotSqURg43Lc8w/0?wx_fmt=png" style="width: 631px !important; height: 307px !important;"></p><p style="margin: 0px 0px 1.2em !important;">当缓存个数为2时的展示图如下，可以看见此时mBaseCache[0]对象刚好是缓存个数为1时的mBaseCache。</p><p style="margin: 0px 0px 1.2em !important;">复用缓存数组是一个逆向过程，大家可以看一下上面的allocArrays函数代码。mBaseCache释放当前的hashes和array，并把mBaseCache[0]（本次缓存前的缓存对象）再赋值mBaseCache。</p><p><img src="http://mmbiz.qpic.cn/mmbiz_png/Sa7mwT4mK89m2fcBfMqSnRfSX0TwyTfcDos5SF2loiaRrpGnQZM8nuKvzXbKMZ9QfzB17N3JcxA2FhOdP9aibUCQ/0?wx_fmt=png" style="width: 770px !important; height: 434.507px !important;"></p><h4 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.2em;">2.4 / ClassCastException问题定位及验证</h4><p style="margin: 0px 0px 1.2em !important;">ClassCastException问题就发生在allocArrays中mBaseCache[0]对象转型时，查看mBaseCache对象的调用，发现仅仅在freeArrays和allocArrays两个函数有直接调用，操作过程也添加了同步锁，且仅仅freeArrays中有对mBaseCache的赋值操作（allocArrays是复用上一次缓存的mBaseCache）。</p><p style="margin: 0px 0px 1.2em !important;">allocArrays中复用hash数组转型时错误，只可能是freeArrays过程中产生了脏数据。</p><p style="margin: 0px 0px 1.2em !important;">我们再仔细查看freeArrays的代码，新缓存的mBaseCache[0]被赋值为mBaseCache，而在allocArrays中复用时读出来的值却是String，说明“array[0] = mBaseCache”操作后又重新修改了array[0] 。</p><p style="margin: 0px 0px 1.2em !important;">freeArrays函数操作的hashes和array都是需要回收的对象，我们看看freeArrays四处调用，其中ensureCapacity(int minimumCapacity) 和 put(K key, V value)执行freeArrays前ArrayMap已经不再引用这对hashes和value，而removeAt(int index)和clear()是执行freeArrays回收操作后再对ArrayMap的mHashes和mArray重新赋值，也就是其它线程有可能在freeArrays“array[0] = mBaseCache”操作后对mArray进行修改，产生脏数据。对array[0] 进行重新赋值，可能是执行put操作时，新增的key的hash值刚好排第一，或者remove操作时删除的刚好是第一个key，导致array后面的值前移。</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0px 0.15em; background-color: rgb(248, 248, 248); white-space: pre; overflow: auto; border-radius: 3px; border-width: 1px; border-style: solid; border-color: rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;">//缓存回收数组
+private static void freeArrays(final int[] hashes, final Object[] array, final int size) {
+ &nbsp; &nbsp;synchronized (ArrayMap.class) {
+ &nbsp; &nbsp; &nbsp; &nbsp;array[0] = mBaseCache;//之后其他线程可能修改array[0]，被重新赋值为String
+ &nbsp; &nbsp; &nbsp; &nbsp;array[1] = hashes;
+ &nbsp; &nbsp; &nbsp; &nbsp;for (int i=(size&lt;&lt;1)-1; i&gt;=2; i--) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;array[i] = null;
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp; &nbsp; &nbsp;mBaseCache = array;
+ &nbsp; &nbsp;}
+}
+
+public void clear() {
+ &nbsp; &nbsp;if (mSize &gt; 0) {
+ &nbsp; &nbsp; &nbsp; &nbsp;freeArrays(mHashes, mArray, mSize);
+ &nbsp; &nbsp; &nbsp; &nbsp;mHashes = ContainerHelpers.EMPTY_INTS;//先回收，再赋值
+ &nbsp; &nbsp; &nbsp; &nbsp;mArray = ContainerHelpers.EMPTY_OBJECTS;
+ &nbsp; &nbsp; &nbsp; &nbsp;mSize = 0;
+ &nbsp; &nbsp;}
+}</code></pre><p style="margin: 0px 0px 1.2em !important;">如何验证我们的分析：<br>前面我们查看源码知道ArrayMap是非线程安全的，测试在用多线程中同时读写同一个ArrayMap可以产生各种crash，唯独ClassCastException很难触发。</p><p style="margin: 0px 0px 1.2em !important;">ClassCastException需要满足两个条件：</p><p style="margin: 0px 0px 1.2em !important;"><strong>1、</strong>线程A刚好释放长度为4或者8的数组(clear或者remove操作)</p><p style="margin: 0px 0px 1.2em !important;"><strong>2、</strong>线程B在A执行“array[0] = mBaseCache”后修改了array[0] ,即新增或者删除的key的hash值刚好是mHash[0]</p><p style="margin: 0px 0px 1.2em !important;">下面我制造了一个特别的测试用例，保证每次添加key-value时，刚好放到修改mHash[0]，即每次都修改array[0];经过测试，发现发生ClassCastException的概率大于50%。</p><p style="margin: 0px 0px 1.2em !important;">如果上述并发操作时put的key对应hash值没有添加到mHash[0]，则并不会引发复用数组时的ClassCastException问题，但会带来脏数据，导致复用的Array是已经含有脏数据，且这种概率相对ClassCastException大得多。</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0px 0.15em; background-color: rgb(248, 248, 248); white-space: pre; overflow: auto; border-radius: 3px; border-width: 1px; border-style: solid; border-color: rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;">new Thread() {
+ &nbsp; &nbsp;public void run() {
+ &nbsp; &nbsp; &nbsp; &nbsp;for (int i = 0; i &lt; 100000; i++) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mMap = new ArrayMap&lt;String, String&gt;(4);//直接分配一个长度为4的数组，直接复用cache
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mMap.clear();//执行clear操作
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp;}
+}.start();
+
+new Thread() {
+ &nbsp; &nbsp;public void run() {
+ &nbsp; &nbsp; &nbsp; &nbsp;for (int i = 0; i &lt; 100000; i++) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mMap.remove("test1"); &nbsp; //清空数据
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mMap.put("test1", "haha");//保证新增数据添加到values[0]
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp;}
+}.start();</code></pre><h2 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.4em;">3 / 解决方案</h2><p style="margin: 0px 0px 1.2em !important;">通过上面的分析和验证，我们知道ArrayMap（即Bundle和Intent两个常用的组件）并发操作时可能触发各种crash或者脏数据，即使ArrayMap是不同对象，由于ArrayMap使用了static声明了全局的共享变量，脏数据也会传递给新的ArrayMap，需要谨慎使用。为了解决ArrayMap并发使用可能带来的问题：</p><p style="margin: 0px 0px 1.2em !important;"><strong>1、</strong>确保ArrayMap使用的线程安全</p><p style="margin: 0px 0px 1.2em !important;">为了根本性的解决并发问题，应该尽量避免Intent或者Bundle多线程使用场景，仅在单线程中使用；对一些特殊的多线程使用场景，则需要考虑添加同步锁或者用队列任务进行处理。</p><p style="margin: 0px 0px 1.2em !important;"><strong>2、</strong>废弃ArrayMap的缓存机制</p><p style="margin: 0px 0px 1.2em !important;">ClassCastException主要是由于ArrayMap的缓存机制引起的，查看freeArrays函数，当Cache中缓存的数 mBaseCacheSize 超过 CACHE_SIZE时，则不再进行缓存操作。</p><p style="margin: 0px 0px 1.2em !important;">这里我们通过反射办法，修改ArrayMap静态的变量mBaseCacheSize，屏蔽ArrayMap的缓存机制，避免回收数组时造成的脏数据问题。当然这个违背了ArrayMap设计缓存机制的初衷，最终我们还是需要完成Intent和Bundle并发使用场景的改造。</p><pre style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace;font-size: 1em; line-height: 1.2em;margin: 1.2em 0px;"><code style="font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0px 0.15em; background-color: rgb(248, 248, 248); white-space: pre; overflow: auto; border-radius: 3px; border-width: 1px; border-style: solid; border-color: rgb(204, 204, 204); padding: 0.5em 0.7em; display: block !important;">public static void changeArrayMapCacheSize() {
+ &nbsp; &nbsp;if(Build.VERSION.SDK_INT&gt;=19){
+ &nbsp; &nbsp; &nbsp; &nbsp;try {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Class arrayMap = Class.forName("android.util.ArrayMap");
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if (arrayMap != null) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Field f1 = arrayMap.getDeclaredField("mBaseCacheSize");
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;f1.setAccessible(true);
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;f1.setInt(null, 100000000);
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Field f2 = arrayMap.getDeclaredField("mTwiceBaseCacheSize");
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;f2.setAccessible(true);
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;f2.setInt(null, 100000000);
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp; &nbsp; &nbsp;} catch (Throwable e) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;e.printStackTrace();
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp;}
+}</code></pre><h2 style="margin: 1.3em 0px 1em; padding: 0px; font-weight: bold;font-size: 1.4em;">4 / 小结</h2><p style="margin: 0px 0px 1.2em !important;"><strong>请记住你常用的Intent，Bundle，ArrayMap都是非线程安全的。</strong></p><p style="margin: 0px 0px 1.2em !important;">也许你项目中并没有ArrayMap并发调用引起ClassCastException的问题，但并发使用Intent和Bundle很容易造成脏数据；如果你项目中已经出现了ArrayMap引起Crash问题，应立即确认是否并发问题并修改，有必要整体review一下项目中的Intent和Bundle使用情况或者添加并发操作监控。</p><p style="margin: 0px 0px 1.2em !important;"><br></p><p style="margin-top: 15px; white-space: normal;"><span style="color: rgb(0, 176, 240); font-family: 宋体; font-size: 14px; white-space: pre-wrap;">✎ 如果您想了解更多关于移动终端安全的内容，请收听我们的</span><strong style="color: rgb(0, 176, 240); font-family: 宋体; font-size: 14px; white-space: pre-wrap; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important;">微信公众号(终端安全那些事儿)</strong><span style="color: rgb(0, 176, 240); font-family: 宋体; font-size: 14px; white-space: pre-wrap;">，我们将定期为您分享；</span><br></p><p style="white-space: normal; line-height: 25.6px; color: rgb(62, 62, 62); font-family: Verdana, 宋体, sans-serif; min-height: 1em; border-width: 0px; border-style: initial; border-color: initial; list-style: none; word-break: normal; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important;"><span style="color: rgb(0, 176, 240); font-family: 宋体; line-height: 22.5px; word-break: normal; font-size: 14px; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important;">✎ 如果您对移动终端安全有什么问题和建议，关注我们的公众账号后直接回复消息联系我们。</span></p><p style="white-space: normal; line-height: 25.6px; color: rgb(62, 62, 62); font-family: Verdana, 宋体, sans-serif; min-height: 1em; border-width: 0px; border-style: initial; border-color: initial; list-style: none; word-break: normal; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important;"><span style="color: rgb(0, 176, 240); font-family: 宋体; line-height: 22.5px; word-break: normal; font-size: 14px; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important;"><br></span></p><p style="margin-bottom: 10px; white-space: normal; line-height: 25.6px; text-align: center;"><span style="max-width: 100%; color: rgb(0, 176, 240); box-sizing: border-box !important; word-wrap: break-word !important;"><strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important;"><span style="max-width: 100%; font-size: 12px; box-sizing: border-box !important; word-wrap: break-word !important;">终端安全那些事儿&nbsp;</span></strong></span><span style="max-width: 100%; color: rgb(0, 176, 240); font-size: 12px; box-sizing: border-box !important; word-wrap: break-word !important;">汇聚最优影响力的安全技术文章</span></p><p style="white-space: normal; line-height: 25.6px; text-align: center;"><img src="http://mmbiz.qpic.cn/mmbiz/Sa7mwT4mK886dCibVZvJVBnhzGR5E6sDE6ZJgeuFIakefoSvcCf6jRUXNO5JMLnqAsicWL4yXpxiaC0cbX2iaWibcYA/0?wx_fmt=png" style="width: 138px !important; height: 137px !important;"></p><p style="white-space: normal; line-height: 25.6px; text-align: center;"><span style="color: rgb(0, 176, 240); font-size: 11px;">▲长按二维码可识别关注</span></p><p><span style="color: rgb(0, 176, 240); font-size: 11px;"><br></span></p><p style="margin: 0px 0px 1.2em !important;"><br></p><hr/><a href="http://mp.weixin.qq.com/s?timestamp=1500386485&src=3&ver=1&signature=FkzcjJJ48va4gLuFLNnuhow9cvlKz4cFd7dYsliFKz9TMpUUX4WW9IJUbZhv2JPEKLEXnqvFZ5z*EUb-LGVAamykLPNN*oA0QvE3G-9zAhxM00zF-PS-thvADxJ2IxA71Vk05wQSHZgf5LRhgtCvjSenD19ja07b9*I4p5TYScQ=">微信地址</a>
+{% endraw  %}
+

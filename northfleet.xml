@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>undefined</title>
-  <description>undefined</description>
+  <title>夜航船Northfleet</title>
+  <description>我们真实可感,躲无可躲的生活.</description>
   <link href="/northfleet.xml"/>
   <link type="application/atom+xml" rel="self" href="/northfleet.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

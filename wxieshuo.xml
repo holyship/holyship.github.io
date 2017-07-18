@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>undefined</title>
-  <description>undefined</description>
+  <title>歪理邪说</title>
+  <description>一切关于未来的故事在实现之前都是歪理邪说.</description>
   <link href="/wxieshuo.xml"/>
   <link type="application/atom+xml" rel="self" href="/wxieshuo.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

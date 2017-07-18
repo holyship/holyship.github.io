@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>不玩会死</title>
-  <description>如果你爱玩,善玩,以玩自豪,欢迎入坑玩货群体.</description>
+  <title>undefined</title>
+  <description>undefined</description>
   <link href="/gh_68029851e270.xml"/>
   <link type="application/atom+xml" rel="self" href="/gh_68029851e270.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

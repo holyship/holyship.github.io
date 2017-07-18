@@ -1,0 +1,13 @@
+---
+title: 滴滴的翻脸功能是怎么实现的
+author: 大鹏
+wechat_source: >-
+  http://mp.weixin.qq.com/s?timestamp=1500385084&src=3&ver=1&signature=FkzcjJJ48va4gLuFLNnuhs2ANaERV18u-TtzLwvinuz5BWh2ZgipY9ULUkM8Txs3xCJ8rycNdeFnFOGGfTK2in3O4YGyVvljfjuIGaCx3yCBNmCQno25g6JVqUJ9FXD8Jjqpgmu11NwV8tctVbx64J5CAudTv-fg7s-WG0WFp9U=
+date: '2017-07-13 00:00:00 +0000'
+
+---
+
+{% raw  %}
+<p><br></p><p><img src="http://mmbiz.qpic.cn/mmbiz_png/dJmd435UZmlcQibfJdbp86XDvJsRjbcVKOTDX4gAWHdmZN0JBlxqYFWcxeWV7Ar2xVZqKSUG1hJkOWTrg7rMnEQ/0?wx_fmt=png" style="width: 770px !important; height: 276.073px !important; visibility: visible !important;"></p><p><br></p><p>先点击上图看一下效果（水印我就不取消了，大家看的清楚一点，不是有后台开发，其实就是一张图）。</p><p><br></p><p>究竟是怎么实现的呢？</p><p><br></p><p>其实就是一张透明图，黑色文字是问题，白色文字是答案微信浏览文章默认白色底，所以显示黑色；点击图片进入图片浏览状态黑色底，显示白色字。</p><p><br></p><p>如下：</p><p><br></p><p><img src="http://mmbiz.qpic.cn/mmbiz_png/dJmd435UZmlcQibfJdbp86XDvJsRjbcVKiaYUhme08D1Je8QjpicLphQfJvekgK7APb74kuMCiaXWxpAKfkx4K3aBg/0?wx_fmt=png" style="width: 770px !important; height: 272.406px !important; visibility: visible !important;"></p><p><br></p><p><span style="font-size: 20px;">（以下忽略，为了~凑~字 ~数）</span></p><p><br></p><p style="white-space: normal;"><span style="font-size: 12px;">做起来也简单，先建立一个透明背景的图片，深色字体（最好是黑色）写入问题文字，“看都被你看过了，点我一下吧”；</span></p><p style="white-space: normal;"><br></p><p style="white-space: normal;"><span style="font-size: 12px;">在下方空白区域，用白色字体写上答案，“看这个有毛用，快回去点击关注吧”。注意一定要用白色，不然穿帮。重要的话说三遍（其实也不重要，先把字数凑够了），注意一定要用白色，不然穿帮！注意一定要用白色，不然穿帮！注意一定要用白色，不然穿帮！</span></p><p style="white-space: normal;"><br></p><p style="white-space: normal;"><span style="font-size: 12px;">最后选择合适的上下部空间，crop一下，存PNG就搞定了。</span></p><p style="white-space: normal;"><br></p><p style="white-space: normal;"><span style="font-size: 12px;">怎么，还不会做？我这是凑~字~数的啊，你要是还不会做，看到这里我也帮你了（怎么三百字数还没有凑到，凑不到我要数羊了，美国都半夜了）</span></p><p style="white-space: normal;"><br></p><p><br></p><hr/><a href="http://mp.weixin.qq.com/s?timestamp=1500385084&src=3&ver=1&signature=FkzcjJJ48va4gLuFLNnuhs2ANaERV18u-TtzLwvinuz5BWh2ZgipY9ULUkM8Txs3xCJ8rycNdeFnFOGGfTK2in3O4YGyVvljfjuIGaCx3yCBNmCQno25g6JVqUJ9FXD8Jjqpgmu11NwV8tctVbx64J5CAudTv-fg7s-WG0WFp9U=">微信地址</a>
+{% endraw  %}
+

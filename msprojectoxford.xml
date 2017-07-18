@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>undefined</title>
-  <description>undefined</description>
+  <title>Microsoft认知服务</title>
+  <description>微软认知服务(前牛津计划)认证公众号.分享认知服务提供的技术文档,演示,服务,应用精选,行业视野,及媒体动态.愿成为您的最强大脑,让智能服务触手可及.</description>
   <link href="/msprojectoxford.xml"/>
   <link type="application/atom+xml" rel="self" href="/msprojectoxford.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

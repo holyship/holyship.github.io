@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>学术鳖的烟酒僧活</title>
-  <description>在西门以南南门以西有一群学术鳖,它们苦逼又逗比,它们学酥伪文艺,它们搬砖搬砖搬砖搬砖永远不停息.喔,秃头的学术鳖,喔,目害的学术鳖,它们自娱自乐误打误撞跌进了paper里,这才发现博士毕业只是在梦里~</description>
+  <title>undefined</title>
+  <description>undefined</description>
   <link href="/xueshubie.xml"/>
   <link type="application/atom+xml" rel="self" href="/xueshubie.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
