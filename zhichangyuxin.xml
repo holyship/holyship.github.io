@@ -5,7 +5,7 @@ layout: null
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title>职场沐心</title>
-  <description>在世界500强IT公司摸爬滚打10余年,同时身为孩子的母亲,深知一个职场女性的不易与艰辛.在人生求索的路上,愿与各位职场女性一同探讨,一同成长.浴心而美,重新而美!</description>
+  <description>在世界500强IT公司摸爬滚打10余年,同时身为孩子的母亲,深知一个职场女性的不易与艰辛.在人生求索的路上,愿与各位职场女性一同探讨,一同成长.沐心而美,重新而美!</description>
   <link href="/zhichangyuxin.xml"/>
   <link type="application/atom+xml" rel="self" href="/zhichangyuxin.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
