@@ -200,8 +200,13 @@ function processArticles(id, processingIndex, list, cacheImage) {
     .then(() => waitUntilNoVerify())
     .then(() => jumpIfOriginal())
     .then(() =>
-      nightmare.wait('.rich_media_content')
+      nightmare.wait('body')
       .evaluate(function() {
+        const richMediaContent = document.querySelector('.rich_media_content');
+        if (!richMediaContent) {
+          return {};
+        }
+
         // remove all lazy loading image
         const images = [];
         document.querySelectorAll('img[data-src]').forEach(e => {
@@ -216,13 +221,17 @@ function processArticles(id, processingIndex, list, cacheImage) {
         return {
           date: new Date(document.querySelector('#post-date').innerText),
           author: document.querySelector('#post-date ~ em,#post-user').innerText,
-          content: `${document.querySelector('.rich_media_content').innerHTML.trim()}<hr/><a href="${location.href}">微信地址</a>${source}`,
+          content: `${richMediaContent.innerHTML.trim()}<hr/><a href="${location.href}">微信地址</a>${source}`,
           wechat_source: location.href,
           images,
         };
       })
     )
     .then((data) => {
+      if (!data.content) {
+        console.log('skip for error.');
+        return;
+      }
       Object.assign(article, data);
       if (!cacheImage) article.images = [];
       return saveArticle(id, article);
