@@ -1,0 +1,13 @@
+---
+title: 求助：这个需求 Elastic Search 能实现吗？
+author: 陈老师
+wechat_source: >-
+  http://mp.weixin.qq.com/s?timestamp=1502116704&src=3&ver=1&signature=fMd4ZeYncDjRuvdiU8EiAtjKy0kX2cMmhihxNi4iUGX2hxQ6NpX9x4jn*WSgzjYSXULZ2wHhF0oOsNuq2*YMxHhE*DkRdxQdQ9h1fSilQe3Y5yyWs66VZYNp5Cu0peq6D9hH6rxl-woZViTf*dvCSEBAqdvIpKQG76nfDP2WMzU=
+date: '2017-08-02 00:00:00 +0000'
+
+---
+
+{% raw  %}
+<p class="p1">最近在用 Elastic Search 做项目，遇到了这样一个需求，本以为 SpanNearQuery 能实现，发现不可以，因为 span_near 中定义的 slop 是两个邻近词之间的距离，而不是整个 query 所在的窗口的大小。</p><p class="p1"><br></p><p class="p1">现在抛出这个这个问题求助，有解决方案的欢迎留言，一旦采用必有重谢。</p><p class="p1"><br></p><p class="p1">给定 n 个词，要求搜索所有含有这 n 个词的文档，并且满足这 n 个词同时出现在长度为 m 的窗口中，还有就是这 n 个词在文档中出现的次序和搜索时的次序一致。</p><p class="p2"><br></p><p class="p1">比如，搜索词是：“明天 北京 上海 火车”，要求文档中匹配的窗口的大小是12个词。</p><p class="p2"><br></p><p class="p1">文档1: 大概 明天 有 一辆 从 北京 开往 上海 的 火车 将 提速 10%</p><p class="p1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1 &nbsp; &nbsp; &nbsp;2 &nbsp; &nbsp; &nbsp; 3 &nbsp; 4 &nbsp; &nbsp; 5 &nbsp; 6 &nbsp; &nbsp; &nbsp;7 &nbsp; &nbsp; &nbsp;8 &nbsp; &nbsp; &nbsp;9 &nbsp; 10 &nbsp; 11 12 &nbsp; &nbsp;13</p><p class="p2"><br></p><p class="p1">这个文档满足条件，2 6 8 10 正好次序和 “明天 北京 上海 火车“一致，并且这几个词的跨度是8，小于要求的12窗口。</p><p class="p2"><br></p><p class="p1">文档2: 大概 明天 有 一辆 从 上海 开往 北京 的 火车 将 提速 10%</p><p class="p1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1 &nbsp; &nbsp; 2 &nbsp; &nbsp; &nbsp; 3 &nbsp; 4 &nbsp; &nbsp;5 &nbsp; &nbsp; 6 &nbsp; &nbsp; &nbsp;7 &nbsp; &nbsp; 8 &nbsp; &nbsp; &nbsp;9 &nbsp; &nbsp;10 &nbsp; &nbsp;11 12 &nbsp; 13 &nbsp;</p><p class="p2"><br></p><p class="p1">这个不满足，因为“上海 北京”的次序不满足。</p><p class="p2"><br></p><p class="p1">文档3: 大概 明天 上午 八点 左右 有 一辆 从 上海 开往 北京 的 混合 动力 的 火车 将 提速 10%</p><p class="p1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;1 &nbsp; &nbsp; &nbsp;2 &nbsp; &nbsp; &nbsp; 3 &nbsp; &nbsp; 4 &nbsp; &nbsp; &nbsp;5 &nbsp; &nbsp; &nbsp; &nbsp;6 &nbsp; 7 &nbsp; &nbsp; 8 &nbsp; 9 &nbsp; &nbsp; &nbsp;10 &nbsp; 11 &nbsp; &nbsp;12 &nbsp;13 &nbsp; &nbsp;14 &nbsp; 15 16 &nbsp; &nbsp; &nbsp; 17 18 &nbsp; &nbsp;19</p><p class="p2"><br></p><p class="p1">这个不满足，2 9 11 16，这几个词的跨度是14，大于要求的12窗口。</p><p><br></p><p>说明白了吧，再次提前谢谢。</p><hr/><a href="http://mp.weixin.qq.com/s?timestamp=1502116704&src=3&ver=1&signature=fMd4ZeYncDjRuvdiU8EiAtjKy0kX2cMmhihxNi4iUGX2hxQ6NpX9x4jn*WSgzjYSXULZ2wHhF0oOsNuq2*YMxHhE*DkRdxQdQ9h1fSilQe3Y5yyWs66VZYNp5Cu0peq6D9hH6rxl-woZViTf*dvCSEBAqdvIpKQG76nfDP2WMzU=">微信地址</a>
+{% endraw  %}
+

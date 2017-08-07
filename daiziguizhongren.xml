@@ -5,7 +5,7 @@ layout: null
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title>待字闺中</title>
-  <description>深度分析大数据、深度学习、人工智能等技术,切中实际应用场景,为大家授业解惑.间或,也会介绍国内外相关领域有趣的面试题.</description>
+  <description>深度分析大数据、深度学习、人工智能等技术,切中实际应用场景,为大家授业解惑.</description>
   <link href="/daiziguizhongren.xml"/>
   <link type="application/atom+xml" rel="self" href="/daiziguizhongren.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
