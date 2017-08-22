@@ -5,7 +5,7 @@ layout: null
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title>Spenser</title>
-  <description>Spenser : 金融圈的职场老司机,世俗的伪文艺男中年,这里是70万城市新青年的思想聚集地.</description>
+  <description>我是Spenser,香港第一自媒体人,金融圈职场老司机,这里有70万城市新青年啦,你怎么才来呀</description>
   <link href="/spenserandhk.xml"/>
   <link type="application/atom+xml" rel="self" href="/spenserandhk.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
