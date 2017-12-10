@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>undefined</title>
-  <description>undefined</description>
+  <title>Lightwing</title>
+  <description>来自英国的三国迷中国通 讲述不一样的视角看世界</description>
   <link href="/gh_9b1680a9f70c.xml"/>
   <link type="application/atom+xml" rel="self" href="/gh_9b1680a9f70c.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
