@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>奇舞周刊精选</title>
+  <description>爆米兔,是一个H5营销在线制作工具.</description>
+  <link href="/gh_b206cf608d16.xml"/>
+  <link type="application/atom+xml" rel="self" href="/gh_b206cf608d16.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>gh_b206cf608d16</id>
+  {% assign posts = site.gh_b206cf608d16 | reverse | limit:10 %}
+  {% for post in posts %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{% if post.wechat_source == blank or post.wechat_source == nil %}{{ post.url }}{% else %}{{ post.wechat_source | xml_escape }}{% endif %}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }} | <a href="{{ post.url }}">缓存地址</a>]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>
