@@ -266,9 +266,9 @@ collections:
     output: true
   # Megvii旷视科技
   # 旷视(Face++)是一家以计算机视觉为核心的人工智能企业，致力于为行业型用户和个人型用户提供全方位的智能解决方案和智能数据服务。
-  megvii-tech: ### too many
-    cache_image: false
-    output: true
+  #megvii-tech: ### too many
+  #  cache_image: false
+  #  output: true
   # MacTalk
   # MacTalk开通于2012年末，内容起于Mac而不止Mac，内容覆盖了技术、创业、产品和人文思考。文风有趣，又有一点力量。相关图书《MacTalk·人生元编程》《MacTalk·跨越边界》
   sagacity-mac:
