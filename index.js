@@ -94,16 +94,15 @@ function downloadImages(id, images, data) {
           const targetFileName = `./_${newUrl}`;
           if (fs.existsSync(targetFileName)) {
             console.log(`duplicate file found, delete ${tempFile}`);
-            try {
-              fs.unlink(tempFile);
-            } catch (e) {}
+            fs.unlink(tempFile);
           } else {
             console.log(`rename ${tempFile} to ${targetFileName}`);
             fs.renameSync(tempFile, targetFileName);
           }
         })
     }, Promise.resolve())
-    .then(() => data);
+    .then(() => data)
+    .catch(e => console.log(e));
 }
 
 function saveArticle(id, { title, author, date, content, fullPath, images, wechat_source }) {
