@@ -291,7 +291,7 @@ collections:
     output: true
   # 奇舞周刊
   # 《奇舞周刊》是由奇舞团维护的前端技术周刊。每周五向大家推送前端技术文章。
-  gh_ffb279ea1674:
+  gh_b206cf608d16:
     cache_image: false
     output: true
   # 趣火星
