@@ -5,7 +5,7 @@ layout: null
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title>飞总聊IT</title>
-  <description>飞总,数据可视化软件领导者Tableau Software 的Staff Engineer.从事大数据的基础构架研发10余年.本公众号的主要目的是和大家交流我在大数据基础架构,IT前沿发展,职场经验的方面的观点和看法.</description>
+  <description>飞总,从事大数据的基础构架研发10余年.本公众号的主要目的是和大家交流我在大数据基础架构,IT前沿发展,职场经验的方面的观点和看法.本公众号仅代表本人的观点,不代表公司观点.</description>
   <link href="/feiitworld.xml"/>
   <link type="application/atom+xml" rel="self" href="/feiitworld.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

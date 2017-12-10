@@ -1,0 +1,13 @@
+---
+title: 连续开发中常见的三个问题
+author: 朱赟
+wechat_source: >-
+  http://mp.weixin.qq.com/s?timestamp=1512886604&src=3&ver=1&signature=0dsH*cvrb7sDcdE*f0PtKJbFPAqPR*gelcBQmi-DpLb5PPPZu8cGcOBgffVbRpjWKNAzUl2tGmx8tnhYvTNkgnpnRPN0UxcZRsia38YFq63hU8m0ZuON5B6RkBAhFh9*j1H2rWNGR07fCVj4mC6bhrnJ5kkyZB4Sz4yPlRW24MY=
+date: '2017-08-28 00:00:00 +0000'
+
+---
+
+{% raw  %}
+<p>开门就见山。</p><p><br></p><p>1</p><p><br></p><p>一是开发初期慎重考虑或者随意决定了的一个开发模式（design pattern），或是作出的一个技术选型的决定，随着需求、范围等的变化，后面的开发者没有完全依照这个模式，或是尝试中途转化成另一个完全不同的模式。</p><p><br></p><p>这往往是比较危险的。因为一旦当初做出决定，所有的设定（assumption）都是基于这个选择的。虽然新的设计或模式如果从头来做，难度和另一个选择可能不相上下。但是在一个已经完全或部分实现的系统中推翻最底层的假设，一点点把所有的地方改过来，其实比从头来写有时候还有困难。</p><p><br></p><p>那是不是一定不能再换模式，或者说怎么避免这种中途改嫁的风险呢？</p><p><br></p><p>测试。</p><p><br></p><p>这可能是 TDD 最适用的场景之一了。首先就是要确保所有的代码行为都被测试例所覆盖。如果最初的代码测试覆盖率不够（test coverage），那么一定要先停下来仔细考虑哪些地方没有被测试。换模式开发的过程中，也要保证再三检查改动的代码是不是有老的或是新的测试覆盖。</p><p><br></p><p>既然这么大的风险和代价，为什么还要改模式呢？</p><p><br></p><p>大家都知道，很多开发中的设计模式（design pattern），当你拿出两个来比较的时候，通常各有长短，根据实际的应用和需求，权衡利弊，才会一个方案比另一个方案略优。很少有那种方案是一边倒压过所有别的方案的。那么随着需求和产品的不断变化，有可能最开始导致你选方案一的设定已经不复存在，或者新的产品特性引入一个新的设定，只有方案二能满足，等等。</p><p><br></p><p>最近见到的各种坑中，此坑最大。</p><p><br></p><p>2</p><p><br></p><p>二是两个项目组并行开发中，一个系统的结果会受另一个系统的输出的影响。一个例子就是一个系统生成各种上游（upstream）的事件（events），另一个系统会依赖于并消费（consume） 这些事件或是数据。</p><p><br></p><p>如果上游的系统在开发中需要不断增加新的函数、功能，那下游系统相应就要做改动，才能保证正确消费上游系统的事件或数据。如果上游系统偶有 bug，需要修理，那么下游系统就需要做相应调整。</p><p><br></p><p>这种两个系统有依赖关系的系统在支付系统中尤其常见，因为生成财报的系统往往就是依赖于平台系统的。上游系统中的 bug fix，如果没有考虑到下游系统，很有可能修了一个 bug 却引起另一个 bug。</p><p><br></p><p>即使在同一个系统中，不同模块有依赖关系的情况也很多。而一个组 fix 一个 bug 却又引发另一个 bug 的情况更是比比皆是。</p><p><br></p><p>怎么解决呢？回归测试（regression tests）。至于具体怎么设计和架构回归测试的整个框架，尽可能降低代码改动引发新 bug 的风险，视具体情况而定。也有一些基本的指导思想。以后再细说。</p><p><br></p><p>3</p><p><br></p><p>三是一个网页，最开始可能加载只要一秒。后期不断加功能、加内容的过程中，不知不觉加载就变成三秒、五秒，甚至八秒、十秒。而等你意识到这个网页不可理喻的慢的时候，也许已经很难找到具体哪个地方或者哪个改动，导致整个加载时间的不必要的增加。</p><p><br></p><p>通常避免这个问题有两个方案。一是 NewRelic 使用的那一套性能剖析，可以给出一个 API 调用从头到尾的时间都如何分配到每个函数的调用上的。这种工具可以在任何一个时间进行性能优化的时候进行参考。唯一不足就是即使知道哪里花的时间多，也还是要费精力去找哪些地方是不必要的，哪些地方是没法轻易性能优化的。</p><p><br></p><p>二是有些性能剖析工具，可以在每次代码改动提交的时候，给出这个改动在性能上增加或者减少多少调用时间。如果能够保证在大的代码改动甚至每次代码改动的时候都做一个简单的测量。很多时候可以保证不会有离谱的代码改动让加载时间增加太多。</p><p><br></p><p>题图：Secret by Jun<br></p><p><br></p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/G7GsUH8ROUZzSrM5dpJ6LNadzsAUicKibTLWB1ibVHJ4kj3ib3dwU1Z5rf4iaELsA1TWO7DQ3e0rkWSs8U0emicQ5Puw/0?wx_fmt=png" style="width: 770px !important; height: 458.49px !important;"></p><hr/><a href="http://mp.weixin.qq.com/s?timestamp=1512886604&src=3&ver=1&signature=0dsH*cvrb7sDcdE*f0PtKJbFPAqPR*gelcBQmi-DpLb5PPPZu8cGcOBgffVbRpjWKNAzUl2tGmx8tnhYvTNkgnpnRPN0UxcZRsia38YFq63hU8m0ZuON5B6RkBAhFh9*j1H2rWNGR07fCVj4mC6bhrnJ5kkyZB4Sz4yPlRW24MY=">微信地址</a>
+{% endraw  %}
+

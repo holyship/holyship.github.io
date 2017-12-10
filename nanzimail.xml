@@ -5,7 +5,7 @@ layout: null
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title>奔跑的楠子</title>
-  <description>一个90后の自我养成记,想要和你一起变成更好的人!</description>
+  <description>没有背景,就直奔前景.朝前奔跑,把阴影甩在身后.</description>
   <link href="/nanzimail.xml"/>
   <link type="application/atom+xml" rel="self" href="/nanzimail.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
