@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>奇舞周刊</title>
-  <description>《奇舞周刊》是由奇舞团维护的前端技术周刊.除周五外,每天向大家推荐一篇前端相关技术文章,每周五向大家推送周刊汇总内容.</description>
+  <title>undefined</title>
+  <description>undefined</description>
   <link href="/gh_ffb279ea1674.xml"/>
   <link type="application/atom+xml" rel="self" href="/gh_ffb279ea1674.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
