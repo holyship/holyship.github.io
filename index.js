@@ -96,7 +96,7 @@ function downloadImages(id, images, data) {
             console.log(`duplicate file found, delete ${tempFile}`);
             try {
               fs.unlink(tempFile);
-            } catch {}
+            } catch (e) {}
           } else {
             console.log(`rename ${tempFile} to ${targetFileName}`);
             fs.renameSync(tempFile, targetFileName);
