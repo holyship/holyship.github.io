@@ -381,9 +381,9 @@ collections:
     output: true
   # 微软小娜
   # 微软小娜（Cortana）是微软发布的全球第一款跨平台智能个人助理。关注即可及时了解最新技能更新，随时提供反馈建议，未来的人工智能将有你的智慧。
-  MS_Cortana:
-    cache_image: false
-    output: true
+  #MS_Cortana: # 404
+  #  cache_image: false
+  #  output: true
   # 微软科技
   # 微软中国官方公众号
   mstech2014: ### too many
