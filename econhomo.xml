@@ -5,7 +5,7 @@ layout: null
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title>徐瑾经济人</title>
-  <description>阅读与分享:经济与人文的路口</description>
+  <description>徐瑾,经济学者,知名财经评论员,著有《白银帝国》、《印钞者》、《凯恩斯的中国聚会》、《有时》等书.</description>
   <link href="/econhomo.xml"/>
   <link type="application/atom+xml" rel="self" href="/econhomo.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
