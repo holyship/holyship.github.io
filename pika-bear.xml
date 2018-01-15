@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>undefined</title>
-  <description>undefined</description>
+  <title>皮卡熊狂想曲</title>
+  <description>网络天下之豪,集人类智慧之大乘,探索未知.目标高远,亦脚踏实地,且行且歌且思. 不媚俗, 不唯上,不趋时.</description>
   <link href="/pika-bear.xml"/>
   <link type="application/atom+xml" rel="self" href="/pika-bear.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>undefined</title>
-  <description>undefined</description>
+  <title>路上的光阴</title>
+  <description>在路上和远方</description>
   <link href="/time_on_the_road.xml"/>
   <link type="application/atom+xml" rel="self" href="/time_on_the_road.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

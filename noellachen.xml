@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>极简极浅</title>
-  <description>IT女工程师,写点简单浅显的技术文章.关注云计算,容器,微服务及DevOps技术,欢迎交流!</description>
+  <title>undefined</title>
+  <description>undefined</description>
   <link href="/noellachen.xml"/>
   <link type="application/atom+xml" rel="self" href="/noellachen.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

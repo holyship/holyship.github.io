@@ -4,8 +4,8 @@ layout: null
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>undefined</title>
-  <description>undefined</description>
+  <title>十分钟读完一本书</title>
+  <description>每月分享一本好书的浓缩版,如果觉得有意思,可以买来读一读.关注领域:商业、科技、心理学、个人成长、有效沟通等.</description>
   <link href="/Read_a_Book_a_Week.xml"/>
   <link type="application/atom+xml" rel="self" href="/Read_a_Book_a_Week.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>

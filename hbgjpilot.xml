@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>航班管家老机长</title>
+  <description>航班管家的小号,和你聊聊关于旅行的一切</description>
+  <link href="/hbgjpilot.xml"/>
+  <link type="application/atom+xml" rel="self" href="/hbgjpilot.xml"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>hbgjpilot</id>
+  {% assign posts = site.hbgjpilot | reverse | limit:10 %}
+  {% for post in posts %}
+  <entry>
+    <id>{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="{% if post.wechat_source == blank or post.wechat_source == nil %}{{ post.url }}{% else %}{{ post.wechat_source | xml_escape }}{% endif %}"/>
+    <title>{{ post.title | xml_escape }}</title>
+    <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <author>
+      <name>{{ post.author | xml_escape }}</name>
+    </author>
+    <content type="html"><![CDATA[{{ post.content }} | <a href="{{ post.url }}">缓存地址</a>]]></content>
+  </entry>
+  {% endfor %}
+
+</feed>

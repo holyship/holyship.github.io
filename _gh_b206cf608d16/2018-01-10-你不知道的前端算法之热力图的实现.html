@@ -1,0 +1,121 @@
+---
+title: 你不知道的前端算法之热力图的实现
+author: 李凤禄
+wechat_source: >-
+  http://mp.weixin.qq.com/s?__biz=MzUyMDUyNDMyOA%3D%3D&mid=2247483691&idx=1&sn=a29d14c2d63da5ec301be8969e364e46&scene=45#wechat_redirect
+date: '2017-12-26 00:00:00 +0000'
+
+---
+
+{% raw  %}
+<blockquote style="box-sizing: inherit;padding-left: 1.2em;margin-top: 20px;margin-bottom: 20px;color: rgb(51, 51, 51);border-left-width: 4px;border-left-color: rgb(226, 227, 228);">本文作者：TalkingData 可视化工程师李凤禄<br style="box-sizing: inherit;">编辑：Aresn</blockquote><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">inMap 是一款基于 canvas 的大数据可视化库，专注于大数据方向点线面的可视化效果展示。目前支持散点、围栏、热力、网格、聚合等方式；致力于让大数据可视化变得简单易用。</p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">GitHub 地址：<span class="invisible" style="box-sizing: inherit;font-variant-numeric: normal;font-variant-east-asian: normal;font-stretch: normal;font-size: 0px;line-height: 0;font-family: a;color: transparent;text-shadow: none;background-color: transparent;">https://</span><span class="visible" style="box-sizing: inherit;">github.com/TalkingData/inmap</span><span class="invisible" style="box-sizing: inherit;font-variant-numeric: normal;font-variant-east-asian: normal;font-stretch: normal;font-size: 0px;line-height: 0;font-family: a;color: transparent;text-shadow: none;background-color: transparent;">inmap</span><span class="ellipsis" style="box-sizing: inherit;"></span><span class="icon-external" style="box-sizing: inherit;font-size: 24px;speak: none;font-feature-settings: normal;font-variant-numeric: normal;font-variant-east-asian: normal;line-height: 1;-webkit-font-smoothing: antialiased;font-family: icomoon !important;"></span>&nbsp;</p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">热力图这个名字听起来很高大上，其实等同于我们常说的密度图。</p><p><br></p><figure style="box-sizing: inherit;margin-top: 24px;margin-bottom: 24px;color: rgb(51, 51, 51);"><br style="box-sizing: inherit;"><p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/ibQKnQyicfeAtCvWNvK4en401nnibIPITuscu1GLa0TZbRWgAwMOzobpjb8OD5zEjNbUPNyHHlKPDhdVKatBSQfpg/0?wx_fmt=jpeg" style="box-sizing: inherit; overflow: hidden; display: block; margin-left: auto; margin-right: auto; width: 600px !important; height: 420px !important;"></p></figure><p><br></p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);"><br style="box-sizing: inherit;"></p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">如图表示，红色区域表示分析要素的密度大，而蓝色区域表示分析要素的密度小。只要点密集，就会形成聚类区域。 看到这么炫的效果，是不是自己也很想实现一把？接下来手把手实现一个热力（带你装逼带你飞、 哈哈），郑重声明：下面代码片段均来自&nbsp;inMap<span class="icon-external" style="box-sizing: inherit;font-size: 24px;speak: none;font-feature-settings: normal;font-variant-numeric: normal;font-variant-east-asian: normal;line-height: 1;-webkit-font-smoothing: antialiased;font-family: icomoon !important;"></span>。</p><h2 style="box-sizing: inherit;margin-top: 20px;margin-bottom: 20px;font-variant-numeric: inherit;font-variant-east-asian: inherit;font-stretch: inherit;font-size: 24px;line-height: inherit;">准备数据</h2><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">inMap 接收的是经纬度数据，需要把它映射到 canvas 的像素坐标，这就用到了墨卡托转换，墨卡托算法很复杂，以后我们会有单独的一篇文章来讲讲他的原理。经过转换，你得到的数据应该是这样的：</p><pre style="box-sizing: inherit;margin-top: 1em;margin-bottom: 1em;padding: 10px;overflow: auto;"><code class="language-text" style="box-sizing: inherit;border-radius: 3px;"><span style="box-sizing: inherit;"></span>[
+ &nbsp;{
+ &nbsp; &nbsp;"lng": "116.395645",
+ &nbsp; &nbsp;"lat": 39.929986,
+ &nbsp; &nbsp;"count": 6,
+ &nbsp; &nbsp;"pixel": { //像素坐标
+ &nbsp; &nbsp; &nbsp;"x": 689,
+ &nbsp; &nbsp; &nbsp;"y": 294
+ &nbsp; &nbsp;}
+ &nbsp;},
+ &nbsp;{
+ &nbsp; &nbsp;"lng": "121.487899",
+ &nbsp; &nbsp;"lat": 31.249162,
+ &nbsp; &nbsp;"count": 10,
+ &nbsp; &nbsp;"pixel": { //像素坐标
+ &nbsp; &nbsp; &nbsp;"x": 759,
+ &nbsp; &nbsp; &nbsp;"y": 439
+ &nbsp; &nbsp;}
+ &nbsp;},
+ &nbsp;...
+]</code></pre><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">好了，我们得到转换后的像素坐标数据(x、y),就可以做下面的事情了。</p><h2 style="box-sizing: inherit;margin-top: 20px;margin-bottom: 20px;font-variant-numeric: inherit;font-variant-east-asian: inherit;font-stretch: inherit;font-size: 24px;line-height: inherit;">创建 canvas 渐变填充</h2><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">创建一个由黑到白的渐变圆</p><pre style="box-sizing: inherit;margin-top: 1em;margin-bottom: 1em;padding: 10px;overflow: auto;"><code class="language-text" style="box-sizing: inherit;border-radius: 3px;"><span style="box-sizing: inherit;"></span>let gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+gradient.addColorStop(0, 'rgba(0,0,0,1)');
+gradient.addColorStop(1, 'rgba(0,0,0,0)');
+ctx.fillStyle = gradient;
+ctx.arc(x, y, radius, 0, Math.PI * 2, true);</code></pre><ul style="" class=" list-paddingleft-2"><li><p>createRadialGradient() 创建线性的渐变对象</p></li><li><p>addColorStop() 定义一个渐变的颜色带</p></li></ul><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">效果如图：</p><p><br></p><figure style="box-sizing: inherit;margin-top: 24px;margin-bottom: 24px;color: rgb(51, 51, 51);"><p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/ibQKnQyicfeAtCvWNvK4en401nnibIPITusGbZxvBkg6Vbynz5wCYnJD4rAceFyLibhTJD4W18d3aEmjOB43Naib3lQ/0?wx_fmt=jpeg" style="box-sizing: inherit; overflow: hidden; display: block; margin-left: auto; margin-right: auto; width: 600px !important; height: 450px !important;"></p></figure><p><br></p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">那么问题就来了，如果每个数据权重值 count 不一样，我们该如何表示呢？</p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);"><br style="box-sizing: inherit;"></p><h2 style="box-sizing: inherit;margin-top: 20px;margin-bottom: 20px;font-variant-numeric: inherit;font-variant-east-asian: inherit;font-stretch: inherit;font-size: 24px;line-height: inherit;">设置 globalAlpha</h2><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">根据不同的count值设置不同的Alpha，假设最大的count的Alpha等于1，最小的count的Alpha为0，那么我根据count求出Alpha。</p><pre style="box-sizing: inherit;margin-top: 1em;margin-bottom: 1em;padding: 10px;overflow: auto;"><code class="language-text" style="box-sizing: inherit;border-radius: 3px;"><span style="box-sizing: inherit;"></span>let alpha = (count - minValue) / (maxValue - minValue);</code></pre><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">然后我们代码如下：</p><pre style="box-sizing: inherit;margin-top: 1em;margin-bottom: 1em;padding: 10px;overflow: auto;"><code class="language-text" style="box-sizing: inherit;border-radius: 3px;"><span style="box-sizing: inherit;"></span>drawPoint(x, y, radius, alpha) {
+ &nbsp; &nbsp;let ctx = this.ctx;
+ &nbsp; &nbsp;ctx.globalAlpha = alpha; //设置 Alpha 透明度
+ &nbsp; &nbsp;ctx.beginPath();
+ &nbsp; &nbsp;let gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+ &nbsp; &nbsp;gradient.addColorStop(0, 'rgba(0,0,0,1)');
+ &nbsp; &nbsp;gradient.addColorStop(1, 'rgba(0,0,0,0)');
+ &nbsp; &nbsp;ctx.fillStyle = gradient;
+ &nbsp; &nbsp;ctx.arc(x, y, radius, 0, Math.PI * 2, true);
+ &nbsp; &nbsp;ctx.closePath();
+ &nbsp; &nbsp;ctx.fill();
+}</code></pre><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">效果跟上一个截图有很大区别，可以对比一下透明度的变化。</p><p><br></p><figure style="box-sizing: inherit;margin-top: 24px;margin-bottom: 24px;color: rgb(51, 51, 51);"><img src="http://mmbiz.qpic.cn/mmbiz_jpg/ibQKnQyicfeAtCvWNvK4en401nnibIPITusX6WP8y9PIvJ1bNicmF7drVA7fGK8KujLvNP2GHXibtHk1aujibfUkVEZg/0?wx_fmt=jpeg" style="box-sizing: inherit; overflow: hidden; display: block; margin-right: auto; margin-left: auto; cursor: -webkit-zoom-in; width: 720px !important; height: 557px !important;"></figure><p><br></p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">（这么黑乎乎的一团，跟热力差距好大啊）</p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);"><br style="box-sizing: inherit;"></p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);"><br style="box-sizing: inherit;"></p><p><br></p><figure style="box-sizing: inherit;margin-top: 24px;margin-bottom: 24px;color: rgb(51, 51, 51);"><img src="http://mmbiz.qpic.cn/mmbiz_jpg/ibQKnQyicfeAtCvWNvK4en401nnibIPITusQwdz9zwBxwZa9nibulsFKA3E5Co49ExRicq2xSGAQlJ9bssbDf5d6sfA/0?wx_fmt=jpeg" style="box-sizing: inherit; overflow: hidden; display: block; margin-right: auto; margin-left: auto; width: 253px !important; height: 172px !important;"></figure><p><br></p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);"><br style="box-sizing: inherit;"></p><h2 style="box-sizing: inherit;margin-top: 20px;margin-bottom: 20px;font-variant-numeric: inherit;font-variant-east-asian: inherit;font-stretch: inherit;font-size: 24px;line-height: inherit;">重置 canvas 画布颜色</h2><ul style="" class=" list-paddingleft-2"><li><p>getImageData() 复制画布上指定矩形的像素数据</p></li><li><p>putImageData() 将图像数据放回画布：</p></li></ul><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">getImageData()返回的数据格式如下：</p><pre style="box-sizing: inherit;margin-top: 1em;margin-bottom: 1em;padding: 10px;overflow: auto;"><code class="language-text" style="box-sizing: inherit;border-radius: 3px;"><span style="box-sizing: inherit;"></span>{
+ &nbsp;"data": {
+ &nbsp; &nbsp;"0": 0, &nbsp; //R
+ &nbsp; &nbsp;"1": 128, //G
+ &nbsp; &nbsp;"2": 0, &nbsp; //B
+ &nbsp; &nbsp;"3": 255, //Aplah
+ &nbsp; &nbsp;"4": 0, //R
+ &nbsp; &nbsp;"5": 128, //G
+ &nbsp; &nbsp;"6": 0, &nbsp;//B
+ &nbsp; &nbsp;"7": 255, //Aplah
+ &nbsp; &nbsp;"8": 0,
+ &nbsp; &nbsp;"9": 128,
+ &nbsp; &nbsp;"10": 0,
+ &nbsp; &nbsp;"11": 255,
+ &nbsp; &nbsp;"12": 0,
+ &nbsp; &nbsp;"13": 128,
+ &nbsp; &nbsp;"14": 0,
+ &nbsp; &nbsp;"15": 255,
+ &nbsp; &nbsp;"16": 0,
+ &nbsp; &nbsp;"17": 128,
+ &nbsp; &nbsp;"18": 0,
+ &nbsp; &nbsp;"19": 255,
+ &nbsp; &nbsp;"20": 0,
+ &nbsp; &nbsp;"21": 128,
+ &nbsp; &nbsp;"22": 0
+ &nbsp; &nbsp;...</code></pre><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">返回的数据是一维数组，每四个元素表示一个像素（rgba）值。</p><h2 style="box-sizing: inherit;margin-top: 20px;margin-bottom: 20px;font-variant-numeric: inherit;font-variant-east-asian: inherit;font-stretch: inherit;font-size: 24px;line-height: inherit;">实现热力原理：读取每个像素的alpha值(透明度)，做一个颜色映射。</h2><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">代码如下：</p><pre style="box-sizing: inherit;margin-top: 1em;margin-bottom: 1em;padding: 10px;overflow: auto;"><code class="language-text" style="box-sizing: inherit;border-radius: 3px;"><span style="box-sizing: inherit;"></span>let palette = this.getColorPaint(); //取色面板
+let img = ctx.getImageData(0, 0, container.width, container.height);
+ &nbsp; &nbsp;let imgData = img.data;
+ &nbsp; &nbsp;let max_opacity = normal.maxOpacity * 255;
+ &nbsp; &nbsp;let min_opacity = normal.minOpacity * 255;
+ &nbsp; &nbsp;//权重区间
+ &nbsp; &nbsp;let max_scope = (normal.maxScope &gt; 1 ? 1 : normal.maxScope) * 255;
+ &nbsp; &nbsp;let min_scope = (normal.minScope &lt; 0 ? 0 : normal.minScope) * 255;
+ &nbsp; &nbsp;let len = imgData.length;
+ &nbsp; &nbsp;for (let i = 3; i &lt; len; i += 4) {
+ &nbsp; &nbsp; &nbsp; &nbsp;let alpha = imgData[i]; 
+ &nbsp; &nbsp; &nbsp; &nbsp;let offset = alpha * 4;
+ &nbsp; &nbsp; &nbsp; &nbsp;if (!offset) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;continue;
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp; &nbsp; &nbsp;//映射颜色
+ &nbsp; &nbsp; &nbsp; &nbsp;imgData[i - 3] = palette[offset];
+ &nbsp; &nbsp; &nbsp; &nbsp;imgData[i - 2] = palette[offset + 1];
+ &nbsp; &nbsp; &nbsp; &nbsp;imgData[i - 1] = palette[offset + 2];
+
+ &nbsp; &nbsp; &nbsp; &nbsp;// 范围区间
+ &nbsp; &nbsp; &nbsp; &nbsp;if (imgData[i] &gt; max_scope) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;imgData[i] = 0;
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp; &nbsp; &nbsp;if (imgData[i] &lt; min_scope) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;imgData[i] = 0;
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+
+ &nbsp; &nbsp; &nbsp; &nbsp;// 透明度
+ &nbsp; &nbsp; &nbsp; &nbsp;if (imgData[i] &gt; max_opacity) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;imgData[i] = max_opacity;
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp; &nbsp; &nbsp;if (imgData[i] &lt; min_opacity) {
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;imgData[i] = min_opacity;
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp;}
+ &nbsp; &nbsp;//将设置后的像素数据放回画布
+ctx.putImageData(img, 0, 0, 0, 0, container.width, container.height);</code></pre><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">创建颜色映射，一个好的颜色映射决定最终效果。 inMap 创建一个长256px的调色面板：</p><pre style="box-sizing: inherit;margin-top: 1em;margin-bottom: 1em;padding: 10px;overflow: auto;"><code class="language-text" style="box-sizing: inherit;border-radius: 3px;"><span style="box-sizing: inherit;"></span>let paletteCanvas = document.createElement('canvas');
+let paletteCtx = paletteCanvas.getContext('2d');
+paletteCanvas.width = 256;
+paletteCanvas.height = 1;
+let gradient = paletteCtx.createLinearGradient(0, 0, 256, 1);</code></pre><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">inMap 默认颜色如下：</p><pre style="box-sizing: inherit;margin-top: 1em;margin-bottom: 1em;padding: 10px;overflow: auto;"><code class="language-text" style="box-sizing: inherit;border-radius: 3px;"><span style="box-sizing: inherit;"></span>this.gradient = {
+ &nbsp; &nbsp;0.25: 'rgb(0,0,255)',
+ &nbsp; &nbsp;0.55: 'rgb(0,255,0)',
+ &nbsp; &nbsp;0.85: 'yellow',
+ &nbsp; &nbsp;1.0: 'rgb(255,0,0)'
+};</code></pre><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">将gradient颜色设置到调色面板对象中</p><pre style="box-sizing: inherit;margin-top: 1em;margin-bottom: 1em;padding: 10px;overflow: auto;"><code class="language-text" style="box-sizing: inherit;border-radius: 3px;"><span style="box-sizing: inherit;"></span>for (let key in gradient) {
+ &nbsp; &nbsp;gradient.addColorStop(key, gradientConfig[key]);
+}</code></pre><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">返回调色面板的像素点数据：</p><pre style="box-sizing: inherit;margin-top: 1em;margin-bottom: 1em;padding: 10px;overflow: auto;"><code class="language-text" style="box-sizing: inherit;border-radius: 3px;"><span style="box-sizing: inherit;"></span>return paletteCtx.getImageData(0, 0, 256, 1).data;</code></pre><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">创建出来的调色面板效果图如下：（看起来像一个渐变颜色条）</p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);"><br style="box-sizing: inherit;"></p><p><br></p><figure style="box-sizing: inherit;margin-top: 24px;margin-bottom: 24px;color: rgb(51, 51, 51);"><img src="http://mmbiz.qpic.cn/mmbiz_jpg/ibQKnQyicfeAtCvWNvK4en401nnibIPITusVOhy4MkJFcUQibicaU0JyJbZq8sibnJuhEltibYOepC8omChVxWDSiale0A/0?wx_fmt=jpeg" style="box-sizing: inherit; overflow: hidden; display: block; margin-right: auto; margin-left: auto; cursor: -webkit-zoom-in; width: 472px !important; height: 30px !important;"></figure><p><br></p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);"><br style="box-sizing: inherit;"></p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">最终我们实现的热力图如下：</p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);"><br style="box-sizing: inherit;"></p><p><br></p><figure style="box-sizing: inherit;margin-top: 24px;margin-bottom: 24px;color: rgb(51, 51, 51);"><img src="http://mmbiz.qpic.cn/mmbiz_jpg/ibQKnQyicfeAtCvWNvK4en401nnibIPITusosBkrEQNW4nV8Yr3uuUFcLngvGvzvVO3MGu1KlAMmspm64lRyyzjxw/0?wx_fmt=jpeg" style="box-sizing: inherit; overflow: hidden; display: block; margin-right: auto; margin-left: auto; cursor: -webkit-zoom-in; width: 720px !important; height: 563px !important;"></figure><p><br></p><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);"><br style="box-sizing: inherit;"></p><h2 style="box-sizing: inherit;margin-top: 20px;margin-bottom: 20px;font-variant-numeric: inherit;font-variant-east-asian: inherit;font-stretch: inherit;font-size: 24px;line-height: inherit;">下节预告</h2><p style="box-sizing: inherit;margin-bottom: 20px;color: rgb(51, 51, 51);">下一节，我们将重点介绍 inMap 文字避让算法的实现。</p><p><br></p><hr/><a href="http://mp.weixin.qq.com/s?__biz=MzUyMDUyNDMyOA%3D%3D&mid=2247483691&idx=1&sn=a29d14c2d63da5ec301be8969e364e46&scene=45#wechat_redirect">微信地址</a> | <a href="https://github.com/TalkingData/inmap">阅读原文</a>
+{% endraw  %}
+
